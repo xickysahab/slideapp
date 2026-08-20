@@ -13,6 +13,8 @@ you have drifted into the wrong spec.
 | File | Role |
 |---|---|
 | [`docs/CLAUDE-DEMO.md`](docs/CLAUDE-DEMO.md) | **The constitution for this build.** Read first, every session. |
+| [`CONTEXT.md`](CONTEXT.md) | **Where the build actually stands** — decisions already made, the five schema deviations and why, what's verified, what bit us, what's left. Read second. |
+| [`docs/BACKEND.md`](docs/BACKEND.md) | The API contract every screen is written against. |
 | [`docs/SwipeHire-DEMO-PRD.md`](docs/SwipeHire-DEMO-PRD.md) | Scope table, demo journey, seed-data requirement, definition of done |
 | [`docs/SwipeHire-DEMO-Architecture.md`](docs/SwipeHire-DEMO-Architecture.md) | Stack, 9-table schema, swipe/match/chat/resume flows |
 | [`docs/SwipeHire-DEMO-Frontend-Spec.md`](docs/SwipeHire-DEMO-Frontend-Spec.md) | Screens to build, design system (reused verbatim from full spec) |
