@@ -20,7 +20,16 @@ import { formatSalaryRange, formatWorkMode, formatYears } from '../../utils/form
  * the user can see rather than be told: their own surname is missing from their own preview,
  * because it's missing from the payload a recruiter receives.
  */
-export function ProfileScreen() {
+
+export interface ProfileScreenProps {
+  /**
+   * Opens the resume replace flow. Optional because this screen is shared: the recruiter tab
+   * renders it directly, with no stack to push that flow onto and no resume to replace.
+   */
+  onManageResume?: () => void;
+}
+
+export function ProfileScreen({ onManageResume }: ProfileScreenProps = {}) {
   const { data, isPending, isError, refetch } = useMyProfile();
   const logout = useAuth((s) => s.logout);
   const email = useAuth((s) => s.user?.email);
@@ -87,6 +96,19 @@ export function ProfileScreen() {
                 value={c.noticePeriodDays != null ? `${c.noticePeriodDays} days` : 'Not stated'}
               />
               <Row label="Resume" value={c.resumeS3Key ? 'Uploaded' : 'Not uploaded'} />
+              {onManageResume && (
+                <View style={styles.resumeAction}>
+                  <Button
+                    label={c.resumeS3Key ? 'Replace resume' : 'Upload a resume'}
+                    variant="secondary"
+                    onPress={onManageResume}
+                    fullWidth
+                  />
+                  <Text style={[type('caption'), styles.note]}>
+                    Re-reads your skills off the new file. You confirm them before anything is saved.
+                  </Text>
+                </View>
+              )}
             </Section>
 
             <Section title={`Skills (${c.skills.length})`}>
@@ -163,5 +185,6 @@ const styles = StyleSheet.create({
   rowLabel: { color: tokens.color.textSecondary },
   rowValue: { color: tokens.color.textPrimary },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.sm },
+  resumeAction: { marginTop: tokens.spacing.md, gap: tokens.spacing.sm },
   logout: { marginTop: tokens.spacing.lg },
 });

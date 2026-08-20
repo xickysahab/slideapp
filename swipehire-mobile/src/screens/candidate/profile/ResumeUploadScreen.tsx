@@ -25,9 +25,20 @@ type Phase = 'idle' | 'uploading' | 'parsing';
 export interface ResumeUploadScreenProps {
   onParsed: (skills: string[]) => void;
   onSkip: () => void;
+  /**
+   * Where this screen is being shown from. 'onboarding' is step 2 of setup; 'update' is the same
+   * screen reached from Profile afterwards, where there is no flow to be a step of and the
+   * secondary action means "cancel", not "skip ahead".
+   */
+  mode?: 'onboarding' | 'update';
 }
 
-export function ResumeUploadScreen({ onParsed, onSkip }: ResumeUploadScreenProps) {
+export function ResumeUploadScreen({
+  onParsed,
+  onSkip,
+  mode = 'onboarding',
+}: ResumeUploadScreenProps) {
+  const isUpdate = mode === 'update';
   const [phase, setPhase] = useState<Phase>('idle');
   const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -71,14 +82,15 @@ export function ResumeUploadScreen({ onParsed, onSkip }: ResumeUploadScreenProps
 
   return (
     <SetupScaffold
-      step={2}
-      totalSteps={4}
-      title="Add your resume"
+      // totalSteps 1 suppresses the progress ticks — there is no setup flow to place this in.
+      step={isUpdate ? 1 : 2}
+      totalSteps={isUpdate ? 1 : 4}
+      title={isUpdate ? 'Replace your resume' : 'Add your resume'}
       subtitle="We'll read your skills off it. You get to correct them on the next screen."
       primaryLabel={fileName ? 'Choose a different file' : 'Choose a PDF'}
       onPrimary={pickAndUpload}
       busy={busy}
-      secondaryLabel="Skip and add skills by hand"
+      secondaryLabel={isUpdate ? 'Cancel' : 'Skip and add skills by hand'}
       onSecondary={onSkip}
       error={error}
     >

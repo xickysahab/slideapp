@@ -25,9 +25,16 @@ export interface ReviewSkillsScreenProps {
   /** What the parser found. Empty when the user skipped the upload. */
   initialSkills: string[];
   onDone: () => void;
+  /** See ResumeUploadScreen — 'update' is this screen reached from Profile, not from setup. */
+  mode?: 'onboarding' | 'update';
 }
 
-export function ReviewSkillsScreen({ initialSkills, onDone }: ReviewSkillsScreenProps) {
+export function ReviewSkillsScreen({
+  initialSkills,
+  onDone,
+  mode = 'onboarding',
+}: ReviewSkillsScreenProps) {
+  const isUpdate = mode === 'update';
   const update = useUpdateProfile();
 
   const [skills, setSkills] = useState<string[]>(initialSkills);
@@ -69,15 +76,15 @@ export function ReviewSkillsScreen({ initialSkills, onDone }: ReviewSkillsScreen
 
   return (
     <SetupScaffold
-      step={3}
-      totalSteps={4}
+      step={isUpdate ? 1 : 3}
+      totalSteps={isUpdate ? 1 : 4}
       title={parsedCount > 0 ? 'Check what we found' : 'Add your skills'}
       subtitle={
         parsedCount > 0
           ? `We read ${parsedCount} skill${parsedCount === 1 ? '' : 's'} off your resume. Remove anything wrong, add anything missing.`
           : 'These decide which roles you match. Add the ones you actually work with.'
       }
-      primaryLabel="Continue"
+      primaryLabel={isUpdate ? 'Save skills' : 'Continue'}
       onPrimary={submit}
       primaryDisabled={skills.length === 0}
       busy={update.isPending}

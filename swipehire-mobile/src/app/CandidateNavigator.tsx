@@ -1,6 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useQueryClient } from '@tanstack/react-query';
 
+import { PROFILE_KEY } from '../hooks/useProfile';
+import { ResumeUploadScreen } from '../screens/candidate/profile/ResumeUploadScreen';
+import { ReviewSkillsScreen } from '../screens/candidate/profile/ReviewSkillsScreen';
 import { JobDetailsScreen } from '../screens/candidate/discover/JobDetailsScreen';
 import { SwipeDeckScreen } from '../screens/candidate/discover/SwipeDeckScreen';
 import { ChatScreen } from '../screens/shared/ChatScreen';
@@ -29,8 +33,15 @@ type MatchesStackParams = {
   Chat: { matchId: string };
 };
 
+type ProfileStackParams = {
+  ProfileMain: undefined;
+  ResumeUpdate: undefined;
+  ResumeSkills: { skills: string[] };
+};
+
 const DiscoverStack = createNativeStackNavigator<DiscoverStackParams>();
 const MatchesStack = createNativeStackNavigator<MatchesStackParams>();
+const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 const Tabs = createBottomTabNavigator();
 
 function DiscoverFlow() {
@@ -86,6 +97,59 @@ function MatchesFlow() {
   );
 }
 
+/**
+ * Profile, plus the resume-replace flow reached from it.
+ *
+ * The upload and review screens were previously only mounted inside onboarding, so a candidate who
+ * had finished setup had no way back to them — the profile could report "Resume: Uploaded" with no
+ * means of changing it. Both screens take a `mode` prop rather than being duplicated, so the
+ * parsing behaviour stays in one place and only the chrome differs.
+ */
+function ProfileFlow() {
+  const qc = useQueryClient();
+
+  // Parsing writes the resume key server-side before the skills are confirmed, so backing out of
+  // the review step still changes the profile. Refetch on the way out either way, or the card goes
+  // on showing the old state.
+  const refresh = () => void qc.invalidateQueries({ queryKey: PROFILE_KEY });
+
+  return (
+    <ProfileStack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+      <ProfileStack.Screen name="ProfileMain">
+        {({ navigation }) => (
+          <ProfileScreen onManageResume={() => navigation.navigate('ResumeUpdate')} />
+        )}
+      </ProfileStack.Screen>
+
+      <ProfileStack.Screen name="ResumeUpdate">
+        {({ navigation }) => (
+          <ResumeUploadScreen
+            mode="update"
+            onParsed={(skills) => navigation.navigate('ResumeSkills', { skills })}
+            onSkip={() => {
+              refresh();
+              navigation.goBack();
+            }}
+          />
+        )}
+      </ProfileStack.Screen>
+
+      <ProfileStack.Screen name="ResumeSkills">
+        {({ navigation, route }) => (
+          <ReviewSkillsScreen
+            mode="update"
+            initialSkills={route.params.skills}
+            onDone={() => {
+              refresh();
+              navigation.popToTop();
+            }}
+          />
+        )}
+      </ProfileStack.Screen>
+    </ProfileStack.Navigator>
+  );
+}
+
 export function CandidateNavigator() {
   // Lives at the navigator so the badge updates wherever the user is — including mid-swipe, which
   // is the whole point of having one.
@@ -109,7 +173,7 @@ export function CandidateNavigator() {
       />
       <Tabs.Screen
         name="ProfileTab"
-        component={ProfileScreen}
+        component={ProfileFlow}
         options={{ tabBarLabel: ({ focused }) => <TabLabel label="Profile" focused={focused} /> }}
       />
     </Tabs.Navigator>
