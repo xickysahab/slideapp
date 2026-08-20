@@ -75,7 +75,11 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
         Role-select and profile-form screens still to build.
   - [x] **DEMO-05** Resume upload, PDF text extraction, skill matching
         (`scripts/verify-resume.ts <file.pdf>` + 11 unit tests on the matcher)
-- [ ] Phase 2 — Jobs & discovery (DEMO-06 → 08)
+- [x] Phase 2 — Jobs & discovery
+  - [x] **DEMO-06** Job creation + recruiter dashboard (`GET /jobs/mine`)
+  - [x] **DEMO-07** Match scoring — skills 80% / experience 20%, 11 unit tests
+  - [x] **DEMO-08** Discovery feeds, blind-first enforced server-side
+        (`scripts/verify-jobs-discovery.ts`, 29 checks)
 - [ ] Phase 3 — Swipe deck UI
   - [~] **DEMO-09** SwipeCard + MatchSeal + gesture — renders correctly on the iOS
         simulator. The "60fps" criterion still needs a human to drag a card; screenshots
