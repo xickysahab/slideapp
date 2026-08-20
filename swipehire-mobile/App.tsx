@@ -1,139 +1,145 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { ActivityIndicator, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { API_ORIGIN, HEALTH_URL } from './src/services/api/config';
+import { SwipeDeck } from './src/components/swipe/SwipeDeck';
+import { useAppFonts } from './src/hooks/useAppFonts';
+import { MOCK_CANDIDATE_DECK, MOCK_JOB_DECK } from './src/services/api/mockDeck';
 import { tokens } from './src/theme/tokens';
+import { type } from './src/theme/typography';
+import type { SwipeCardData, SwipeDirection } from './src/types';
 
 /**
- * DEMO-00 placeholder.
+ * DEMO-09 harness.
  *
- * It pings the backend's health endpoint rather than rendering static text, so this screen proves
- * the two halves of the project actually reach each other — which is the part of the scaffolding
- * most likely to be quietly broken (wrong host, CORS, port). Replaced by the real Splash screen
- * and RootNavigator in Phase 1.
- *
- * Fonts (Fraunces / Inter / IBM Plex Mono) are not loaded yet, so this deliberately uses only the
- * size, weight, color and spacing tokens — not `fontFamily`. Applying a font family before the
- * font files exist just silently falls back to the system face and hides the gap.
+ * A scratch screen for building and checking the swipe deck against static data, with a toggle
+ * between the candidate-facing job deck and the recruiter-facing candidate deck so both card
+ * layouts can be exercised side by side. Replaced by RootNavigator once Phase 1 lands — nothing
+ * here is a screen from Frontend Spec §9.
  */
 
-type HealthState = 'checking' | 'ok' | 'unreachable';
+type DeckRole = 'candidate' | 'recruiter';
 
 export default function App() {
-  const [health, setHealth] = useState<HealthState>('checking');
+  const { fontsLoaded, fontError } = useAppFonts();
+  const [role, setRole] = useState<DeckRole>('candidate');
+  const [lastAction, setLastAction] = useState<string | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+  const cards = useMemo(
+    () => (role === 'candidate' ? MOCK_JOB_DECK : MOCK_CANDIDATE_DECK),
+    [role],
+  );
 
-    fetch(HEALTH_URL, { signal: controller.signal })
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(String(res.status)))))
-      .then((body: { status?: string }) => {
-        if (!cancelled) setHealth(body.status === 'ok' ? 'ok' : 'unreachable');
-      })
-      .catch(() => {
-        if (!cancelled) setHealth('unreachable');
-      })
-      .finally(() => clearTimeout(timeout));
-
-    return () => {
-      cancelled = true;
-      clearTimeout(timeout);
-      controller.abort();
-    };
+  const handleSwipe = useCallback((card: SwipeCardData, direction: SwipeDirection) => {
+    const name =
+      card.kind === 'job' ? card.data.title : `${card.data.firstName} ${card.data.lastInitial}.`;
+    setLastAction(`${direction === 'right' ? 'Shortlisted' : 'Passed'} · ${name}`);
   }, []);
 
-  return (
-    <SafeAreaView style={styles.screen}>
-      <View style={styles.content}>
-        <Text style={styles.wordmark}>SwipeHire</Text>
-        <Text style={styles.tagline}>Mutual intent, not mass applications.</Text>
+  // Nothing renders text before the three type roles are available — a flash of system font
+  // followed by a swap to Fraunces is the kind of detail that reads as unfinished.
+  if (!fontsLoaded && !fontError) {
+    return (
+      <View style={styles.bootWrap}>
+        <ActivityIndicator color={tokens.color.primary} />
+      </View>
+    );
+  }
 
-        <View style={styles.statusRow}>
-          {health === 'checking' ? (
-            <ActivityIndicator color={tokens.color.textSecondary} />
-          ) : (
-            <View
-              style={[
-                styles.dot,
-                { backgroundColor: health === 'ok' ? tokens.color.success : tokens.color.error },
-              ]}
-            />
-          )}
-          <Text style={styles.statusText}>
-            {health === 'checking' && 'Contacting backend…'}
-            {health === 'ok' && 'Backend reachable'}
-            {health === 'unreachable' && 'Backend unreachable'}
+  return (
+    <GestureHandlerRootView style={styles.root}>
+      <SafeAreaView style={styles.root}>
+        <View style={styles.header}>
+          <Text style={[type('h3'), styles.wordmark]}>SwipeHire</Text>
+
+          <View style={styles.toggle}>
+            {(['candidate', 'recruiter'] as const).map((r) => (
+              <Pressable
+                key={r}
+                onPress={() => {
+                  setRole(r);
+                  setLastAction(null);
+                }}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: role === r }}
+                style={[styles.toggleItem, role === r && styles.toggleItemActive]}
+              >
+                <Text
+                  style={[
+                    type('caption'),
+                    role === r ? styles.toggleLabelActive : styles.toggleLabel,
+                  ]}
+                >
+                  {r === 'candidate' ? 'Jobs' : 'Candidates'}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
+        {/* Remounts the deck on role change so the rolling window restarts from the first card. */}
+        <SwipeDeck
+          key={role}
+          cards={cards}
+          onSwipe={handleSwipe}
+          emptyTitle="That's everyone for now"
+          emptyBody={
+            role === 'candidate'
+              ? 'You have seen every open role matching your profile.'
+              : 'You have reviewed every candidate for this listing.'
+          }
+        />
+
+        <View style={styles.statusBar}>
+          <Text style={[type('dataS'), styles.statusText]} numberOfLines={1}>
+            {lastAction ?? 'DEMO-09 · drag a card, or use the buttons'}
           </Text>
         </View>
 
-        <Text style={styles.origin}>{API_ORIGIN}</Text>
-      </View>
-
-      <Text style={styles.footer}>DEMO-00 · scaffolding</Text>
-      <StatusBar style="dark" />
-    </SafeAreaView>
+        <StatusBar style="light" />
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  root: { flex: 1, backgroundColor: tokens.color.background },
+  bootWrap: {
     flex: 1,
     backgroundColor: tokens.color.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: {
-    alignItems: 'center',
-    paddingHorizontal: tokens.spacing.xl,
-  },
-  wordmark: {
-    fontSize: tokens.typography.scale.displayL.fontSize,
-    lineHeight: tokens.typography.scale.displayL.lineHeight,
-    fontWeight: tokens.typography.scale.displayL.fontWeight,
-    color: tokens.color.textPrimary,
-  },
-  tagline: {
-    marginTop: tokens.spacing.sm,
-    fontSize: tokens.typography.scale.bodyM.fontSize,
-    lineHeight: tokens.typography.scale.bodyM.lineHeight,
-    color: tokens.color.textSecondary,
-    textAlign: 'center',
-  },
-  statusRow: {
-    marginTop: tokens.spacing.xxl,
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: tokens.spacing.sm,
-    backgroundColor: tokens.color.surface,
-    borderColor: tokens.color.border,
-    borderWidth: 1,
-    borderRadius: tokens.radius.pill,
-    paddingVertical: tokens.spacing.sm,
+    justifyContent: 'space-between',
     paddingHorizontal: tokens.spacing.lg,
+    paddingVertical: tokens.spacing.md,
+    backgroundColor: tokens.color.backgroundChrome,
   },
-  dot: {
-    width: tokens.spacing.sm,
-    height: tokens.spacing.sm,
-    borderRadius: tokens.radius.pill,
+  wordmark: { color: tokens.color.textInverse },
+  toggle: {
+    flexDirection: 'row',
+    backgroundColor: tokens.color.surfaceAlt + '22',
+    borderRadius: tokens.radius.sm,
+    padding: 2,
   },
-  statusText: {
-    fontSize: tokens.typography.scale.bodyM.fontSize,
-    lineHeight: tokens.typography.scale.bodyM.lineHeight,
-    color: tokens.color.textPrimary,
+  toggleItem: {
+    paddingHorizontal: tokens.spacing.md,
+    paddingVertical: tokens.spacing.sm,
+    borderRadius: tokens.radius.sm - 2,
+    minHeight: 32,
+    justifyContent: 'center',
   },
-  origin: {
-    marginTop: tokens.spacing.md,
-    fontSize: tokens.typography.scale.caption.fontSize,
-    lineHeight: tokens.typography.scale.caption.lineHeight,
-    color: tokens.color.textSecondary,
+  toggleItemActive: { backgroundColor: tokens.color.primary },
+  toggleLabel: { color: tokens.color.textInverse, opacity: 0.55 },
+  toggleLabelActive: { color: tokens.color.textInverse },
+  statusBar: {
+    paddingHorizontal: tokens.spacing.lg,
+    paddingVertical: tokens.spacing.md,
+    alignItems: 'center',
   },
-  footer: {
-    position: 'absolute',
-    bottom: tokens.spacing.xl,
-    fontSize: tokens.typography.scale.caption.fontSize,
-    color: tokens.color.textSecondary,
-  },
+  statusText: { color: tokens.color.textSecondary },
 });
