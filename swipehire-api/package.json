@@ -21,7 +21,13 @@
     "typeorm": "typeorm-ts-node-commonjs -d src/config/data-source.ts",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
-    "migration:show": "npm run typeorm -- migration:show"
+    "migration:show": "npm run typeorm -- migration:show",
+    "seed": "ts-node scripts/seed.ts",
+    "verify:storage": "ts-node scripts/verify-storage.ts",
+    "verify:auth": "ts-node scripts/verify-auth.ts",
+    "verify:profile": "ts-node scripts/verify-profile.ts",
+    "verify:jobs": "ts-node scripts/verify-jobs-discovery.ts",
+    "verify:loop": "ts-node scripts/verify-loop.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

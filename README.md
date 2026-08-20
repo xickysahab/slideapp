@@ -94,11 +94,37 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
   - [x] **DEMO-16** Propose → accept, one round
   - [x] **DEMO-16b** Hired / Not Selected closure
   - Whole journey verified end to end: `scripts/verify-loop.ts`, 39 checks incl. sockets
-- [ ] Phase 6 — Seed data & polish (DEMO-17 → 19)
+- [~] Phase 6 — Seed data & polish
+  - [x] **DEMO-17** Seed script — 18 jobs, 18 candidates, a primed match, a live
+        conversation, and both terminal states (`npm run seed`)
+  - [ ] **DEMO-18** Empty / loading / error states
+  - [ ] **DEMO-19** End-to-end dry run on a device
 - [ ] Phase 7 — Deployment (DEMO-20 → 21)
 
 `DEMO-05b` (embeddings) is intentionally out of scope — match scoring uses the skills-80% /
 experience-20% fallback formula.
+
+## Demo accounts
+
+After `npm run seed`. Password for all of them: `swipehire2026`
+
+| Account | Notes |
+|---|---|
+| `aditi@swipehire.demo` | Candidate. Her deck opens on a 100% match whose recruiter has already swiped right, so the first right-swipe fires "It's a Match!" live. Her matches list already holds a live conversation and a closed match with feedback. |
+| `hr.razorpay@swipehire.demo` | Recruiter. Four listings, seventeen candidates ranked per listing. |
+| `hr.postman@swipehire.demo` | Recruiter holding the seeded conversation. |
+
+## Checking the backend
+
+With the server running, each script drives the real HTTP surface — and cleans up after itself:
+
+```bash
+npm run verify:loop
+```
+
+`verify:auth`, `verify:profile`, `verify:jobs`, `verify:storage` and `verify:loop` cover their own
+areas; `verify:loop` walks the whole journey including the live socket events. `npm test` runs the
+unit tests for skill matching and match scoring.
 
 ## A note on sharing
 
