@@ -73,7 +73,8 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
         but deliberately not wired into the client — see CLAUDE.md.
   - [~] **DEMO-04** Profile API done and verified (`scripts/verify-profile.ts`).
         Role-select and profile-form screens still to build.
-  - [ ] **DEMO-05** Resume upload & parsing
+  - [x] **DEMO-05** Resume upload, PDF text extraction, skill matching
+        (`scripts/verify-resume.ts <file.pdf>` + 11 unit tests on the matcher)
 - [ ] Phase 2 — Jobs & discovery (DEMO-06 → 08)
 - [ ] Phase 3 — Swipe deck UI
   - [~] **DEMO-09** SwipeCard + MatchSeal + gesture — renders correctly on the iOS

@@ -1,14 +1,26 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { CandidateProfile } from '../../database/entities/candidate-profile.entity';
+import { ResumeController } from './resume.controller';
+import { ResumeService } from './resume.service';
 
 /**
  * ResumeModule — see docs/SwipeHire-DEMO-Architecture.md §2.
  *
- * Owns tables: none (writes skills via ProfileService)
+ * Owns tables: none of its own — it writes the resume key and extracted skills onto
+ *              candidate_profiles, which ProfileModule owns.
  * Built in:    DEMO-05
  *
- * Module boundaries are kept identical to the full architecture doc on purpose: other modules
- * call this one's service interface, never its tables directly, even though this is a single
- * deployable. That boundary is what makes a later service extraction mechanical.
+ * The full spec runs this as a separate Python service with a deterministic pipeline and an LLM
+ * fallback. The demo folds it in here as pdf-parse plus a keyword taxonomy (Architecture §1, §6):
+ * one deployable, no second runtime, and accurate enough precisely because the seed resumes are
+ * ones you picked.
  */
-@Module({})
+@Module({
+  imports: [TypeOrmModule.forFeature([CandidateProfile])],
+  controllers: [ResumeController],
+  providers: [ResumeService],
+  exports: [ResumeService],
+})
 export class ResumeModule {}
