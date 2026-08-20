@@ -7,6 +7,8 @@ import { ChatScreen } from '../screens/shared/ChatScreen';
 import { MatchesListScreen } from '../screens/shared/MatchesListScreen';
 import { ProfileScreen } from '../screens/shared/ProfileScreen';
 import type { JobCardData } from '../types';
+import { useUnreadCount } from '../hooks/useUnreadCount';
+import { TabLabel } from './TabLabel';
 import { tabScreenOptions } from './tabBarStyle';
 
 /**
@@ -85,11 +87,31 @@ function MatchesFlow() {
 }
 
 export function CandidateNavigator() {
+  // Lives at the navigator so the badge updates wherever the user is — including mid-swipe, which
+  // is the whole point of having one.
+  const unread = useUnreadCount();
+
   return (
     <Tabs.Navigator screenOptions={tabScreenOptions}>
-      <Tabs.Screen name="DiscoverTab" component={DiscoverFlow} options={{ title: 'Discover' }} />
-      <Tabs.Screen name="MatchesTab" component={MatchesFlow} options={{ title: 'Matches' }} />
-      <Tabs.Screen name="ProfileTab" component={ProfileScreen} options={{ title: 'Profile' }} />
+      <Tabs.Screen
+        name="DiscoverTab"
+        component={DiscoverFlow}
+        options={{ tabBarLabel: ({ focused }) => <TabLabel label="Discover" focused={focused} /> }}
+      />
+      <Tabs.Screen
+        name="MatchesTab"
+        component={MatchesFlow}
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <TabLabel label="Matches" focused={focused} count={unread} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="ProfileTab"
+        component={ProfileScreen}
+        options={{ tabBarLabel: ({ focused }) => <TabLabel label="Profile" focused={focused} /> }}
+      />
     </Tabs.Navigator>
   );
 }

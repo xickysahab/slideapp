@@ -105,6 +105,7 @@ export function SwipeDeckScreen({ onOpenMatch, onOpenDetails }: SwipeDeckScreenP
         onPressDetails={(card) => card.kind === 'job' && onOpenDetails(card.data)}
         emptyTitle="That's every role for now"
         emptyBody="You've seen everything matching your profile. New listings appear through the day."
+        onRefresh={() => void refetch()}
       />
 
       <MatchCelebration

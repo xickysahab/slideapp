@@ -125,6 +125,7 @@ export function CandidateDeckScreen({
         onPressDetails={(card) => card.kind === 'candidate' && onOpenDetails(card.data)}
         emptyTitle="You've seen everyone"
         emptyBody="Every candidate matching this listing has been reviewed. New profiles appear as people join."
+        onRefresh={() => void refetch()}
       />
 
       <MatchCelebration

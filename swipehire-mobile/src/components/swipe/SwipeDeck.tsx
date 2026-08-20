@@ -29,6 +29,14 @@ export interface SwipeDeckProps {
   onExhausted?: () => void;
   emptyTitle?: string;
   emptyBody?: string;
+  /**
+   * Refetches the deck from the empty state.
+   *
+   * Without it an exhausted deck is a dead end — the cards are gone, nothing brings them back, and
+   * the only way forward is another tab. New listings do appear through the day, so there is
+   * genuinely something to fetch.
+   */
+  onRefresh?: () => void;
 }
 
 export function SwipeDeck({
@@ -38,6 +46,7 @@ export function SwipeDeck({
   onExhausted,
   emptyTitle = 'No more cards right now',
   emptyBody = 'Check back shortly — new listings are added through the day.',
+  onRefresh,
 }: SwipeDeckProps) {
   const { width, height } = useWindowDimensions();
   const [index, setIndex] = useState(0);
@@ -59,7 +68,23 @@ export function SwipeDeck({
   );
 
   if (index >= cards.length) {
-    return <EmptyState title={emptyTitle} body={emptyBody} />;
+    return (
+      <EmptyState
+        title={emptyTitle}
+        body={emptyBody}
+        actionLabel={onRefresh ? 'Check again' : undefined}
+        onAction={
+          onRefresh
+            ? () => {
+                // Reset the window too, or a refetch would return cards the deck has already
+                // scrolled past its own index.
+                setIndex(0);
+                onRefresh();
+              }
+            : undefined
+        }
+      />
+    );
   }
 
   // Rendered back-to-front so the stacking order is correct even where zIndex is unreliable.
