@@ -1,0 +1,40 @@
+{
+  "cli": {
+    "version": ">= 5.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview",
+      "ios": {
+        "simulator": false
+      },
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "//": "Set this to the deployed backend before building — it is baked into the bundle.",
+        "EXPO_PUBLIC_API_URL": "https://REPLACE-ME.up.railway.app"
+      }
+    },
+    "preview-simulator": {
+      "//": "Runs in the iOS Simulator without an Apple Developer account. Useful for checking a real build before paying for one.",
+      "extends": "preview",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://localhost:3000"
+      }
+    }
+  },
+  "submit": {
+    "//": "Deliberately empty. Demo PRD section 6 rules out App Store and Play Store submission — the deliverable is an Expo Go session or an internal preview link.",
+    "preview": {}
+  }
+}

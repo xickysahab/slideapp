@@ -1,0 +1,37 @@
+# Render blueprint — the alternative to railway.json, pick one.
+#
+# Lives at the repo root because Render reads the blueprint from there, and `rootDir` is what
+# points it at the backend. The mobile app is not deployed here; it ships through Expo.
+services:
+  - type: web
+    name: swipehire-api
+    runtime: node
+    plan: free
+    rootDir: swipehire-api
+    buildCommand: npm ci && npm run build
+    # Migrations run before the new instance starts taking traffic. Deliberately a separate command
+    # rather than `migrationsRun: true` in the data source — a deploy should not be able to alter
+    # the schema as an invisible side effect of restarting.
+    preDeployCommand: npm run migration:run
+    startCommand: npm run start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Every value below is secret or environment-specific and must be set in the dashboard.
+      # `sync: false` is what tells Render to prompt rather than to bake a value into this file.
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_STORAGE_BUCKET
+        value: resumes
+      # Comma-separated. Only governs browser origins; a native app doesn't enforce CORS.
+      - key: CORS_ORIGINS
+        sync: false

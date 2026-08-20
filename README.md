@@ -96,7 +96,10 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
         conversation, and both terminal states (`npm run seed`)
   - [ ] **DEMO-18** Empty / loading / error states
   - [ ] **DEMO-19** End-to-end dry run on a device
-- [ ] Phase 7 — Deployment (DEMO-20 → 21)
+- [~] Phase 7 — Deployment — config committed, accounts still needed
+  - [~] **DEMO-20** Backend: `railway.json` and `render.yaml` ready; needs a host account
+  - [~] **DEMO-21** Mobile: `eas.json` ready; needs an Expo account
+  - See [`docs/DEPLOY.md`](docs/DEPLOY.md)
 
 `DEMO-05b` (embeddings) is intentionally out of scope — match scoring uses the skills-80% /
 experience-20% fallback formula.

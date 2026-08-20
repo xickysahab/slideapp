@@ -1,0 +1,139 @@
+# Deploying the demo
+
+Two things ship: the backend to Railway or Render, and the mobile app through Expo. The database is
+already live on Supabase and doesn't move.
+
+Everything below needs accounts that don't exist yet. The configuration is committed, so the work
+is account setup and pasting values, not writing anything.
+
+---
+
+## 1. Backend
+
+Pick one host. Both configs are committed; the other one is simply ignored.
+
+### Railway
+
+1. New project → Deploy from GitHub → pick this repo.
+2. **Set the service root directory to `swipehire-api`.** The repo holds two projects, and without
+   this Railway builds the wrong one — the most common way this goes wrong.
+3. Paste the environment variables from §3 into the service's Variables tab.
+4. Deploy. `railway.json` already sets the build, the pre-deploy migration, the start command and
+   the health check.
+5. Generate a public domain from the service's Settings → Networking.
+
+### Render
+
+1. New → Blueprint → point it at this repo. `render.yaml` at the root does the rest, including
+   `rootDir`.
+2. Render will prompt for every variable marked `sync: false`. Fill them in from §3.
+3. Deploy.
+
+### Either way, check it landed
+
+```bash
+curl https://<your-url>/health          # {"status":"ok",...}
+curl https://<your-url>/health/ready    # {"status":"ok","database":"reachable",...}
+```
+
+`/health` deliberately doesn't touch the database — it answers "is this process alive", so a
+transient database blip can't get the container killed and restarted into the same blip.
+`/health/ready` is the one that checks the database.
+
+---
+
+## 2. Mobile
+
+Set the API URL to the deployed backend, not localhost:
+
+```bash
+# swipehire-mobile/.env
+EXPO_PUBLIC_API_URL=https://<your-url>
+```
+
+`EXPO_PUBLIC_*` values are inlined into the JS bundle at build time, so this must never hold a
+secret. A URL is fine.
+
+Then either:
+
+- **Expo Go** — `npx expo start`, scan the QR. Fastest, and enough for a walkthrough on your own
+  phone. The other person needs Expo Go installed.
+- **EAS preview build** — `npx eas build --profile preview --platform ios`. Installs like a real
+  app, no store review, shareable link. Needs an Expo account and, for iOS, an Apple Developer
+  account. Budget more time than you think for the first build.
+
+---
+
+## 3. Environment variables
+
+| Variable | Where it comes from |
+|---|---|
+| `NODE_ENV` | `production` |
+| `PORT` | Set by the host. Don't override it. |
+| `DATABASE_URL` | Supabase → Settings → Database → Connection string (URI) |
+| `JWT_ACCESS_SECRET` | Generate — see below |
+| `JWT_REFRESH_SECRET` | Generate — **a different one** |
+| `SUPABASE_URL` | `https://<project-ref>.supabase.co` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API → `service_role` |
+| `SUPABASE_STORAGE_BUCKET` | `resumes` |
+| `CORS_ORIGINS` | Comma-separated. Leave empty unless something browser-based needs it. |
+| `GOOGLE_OAUTH_CLIENT_ID` | Leave unset. `POST /auth/google` returns 503; nothing calls it. |
+
+Generate each secret separately:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+```
+
+The two JWT secrets must differ. Signing refresh tokens with the access secret would make a stolen
+access token exchangeable for a thirty-day session.
+
+**On CORS:** a native app doesn't enforce it, so an empty value is correct for a phone-only demo. In
+production this is deliberately closed rather than `*` — the deployed backend shouldn't answer
+arbitrary origins.
+
+---
+
+## 4. Seed the deployed database
+
+The demo is unwatchable against an empty deck. Against the same database the backend points at:
+
+```bash
+cd swipehire-api
+DATABASE_URL="<the deployed connection string>" npm run seed
+```
+
+Safe to re-run — it clears only what it previously created, recognised by the `@swipehire.demo`
+address, so nothing else in the database is touched.
+
+Accounts and passwords are in the README.
+
+---
+
+## 5. Check it end to end
+
+With the deployed URL:
+
+```bash
+cd swipehire-api
+VERIFY_BASE_URL=https://<your-url> npm run verify:loop
+```
+
+39 checks covering swipe, match, chat, interview and outcome, including the live socket events. It
+creates its own throwaway accounts and removes them afterwards, so it's safe to run against the
+demo database — but do run it *before* the meeting, not during.
+
+Then open the app on a phone and walk the journey yourself. That's DEMO-19, and it's the one thing
+no script covers: whether it comes in under five minutes and feels right in the hand.
+
+---
+
+## 6. Before you share a link
+
+`docs/SwipeHire-DEMO-Security-Baseline.md` §3 is the line. This build skips rate limiting, malware
+scanning, RLS and the rest of the pre-launch checklist — all recorded, deliberate cuts, and fine
+for a controlled walkthrough in front of one person.
+
+They are not fine for a link left standing afterwards. If the client wants to poke at it themselves
+later — a good sign if it happens — give them a short-lived EAS preview whose lifetime you control,
+and take it down after.
