@@ -64,7 +64,8 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
 
 - [x] **DEMO-00** Repo & environment scaffolding
 - [x] **DEMO-01** Database provisioning — Supabase Postgres 17.6, 9 tables, pgvector enabled
-- [ ] **DEMO-02** File storage setup
+- [x] **DEMO-02** File storage — private Supabase bucket, PDF-only, signed URLs both ways
+      (`npx ts-node scripts/verify-storage.ts` re-checks the round trip)
 - [ ] Phase 1 — Auth & profiles (DEMO-03 → 05)
 - [ ] Phase 2 — Jobs & discovery (DEMO-06 → 08)
 - [ ] Phase 3 — Swipe deck UI

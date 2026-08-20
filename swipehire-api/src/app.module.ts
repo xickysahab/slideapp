@@ -11,6 +11,7 @@ import { SwipeMatchModule } from './modules/swipe-match/swipe-match.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { InterviewModule } from './modules/interview/interview.module';
 import { ResumeModule } from './modules/resume/resume.module';
+import { StorageModule } from './shared/storage/storage.module';
 
 /**
  * Module layout mirrors docs/SwipeHire-DEMO-Architecture.md §2. The feature modules are empty
@@ -24,6 +25,7 @@ import { ResumeModule } from './modules/resume/resume.module';
     // Migrations are run explicitly via `npm run migration:run`, never on boot — a deploy should
     // not be able to alter the schema as a side effect of restarting.
     TypeOrmModule.forRoot(dataSourceOptions),
+    StorageModule,
     HealthModule,
     AuthModule,
     ProfileModule,
