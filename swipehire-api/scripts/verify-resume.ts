@@ -43,7 +43,15 @@ async function call(method: string, path: string, body?: unknown, token?: string
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const text = await res.text();
-  return { status: res.status, body: text ? JSON.parse(text) : null };
+  // Not every response on the path is ours. Deployed behind Render, Cloudflare sits in front and
+  // answers some requests itself with an HTML block page — assuming JSON here turned a passing
+  // check into a crash that looked like a backend fault.
+  if (!text) return { status: res.status, body: null as any };
+  try {
+    return { status: res.status, body: JSON.parse(text) };
+  } catch {
+    return { status: res.status, body: { edgeBlocked: true, snippet: text.slice(0, 120) } as any };
+  }
 }
 
 async function signup(email: string, role: 'candidate' | 'recruiter') {
@@ -104,8 +112,14 @@ async function main() {
     `got ${stolen.status}`,
   );
 
+  // 403 is Cloudflare refusing the traversal signature before the request reaches us, which only
+  // happens deployed. Either way the payload never gets near storage, which is what this asserts.
   const traversal = await call('POST', '/resume/parse', { key: '../../etc/passwd' }, token);
-  check('a traversal-shaped key is rejected (400)', traversal.status === 400, `got ${traversal.status}`);
+  check(
+    'a traversal-shaped key is rejected',
+    traversal.status === 400 || traversal.status === 403,
+    `got ${traversal.status}${traversal.status === 403 ? ' (blocked at the edge, not by us)' : ''}`,
+  );
 
   // --- content sniffing ----------------------------------------------------
   const fakeSigned = await call('POST', '/resume/upload-url', {}, token);
