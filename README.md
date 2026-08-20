@@ -17,7 +17,7 @@ the recruiter side.
 ## Layout
 
 ```
-swipehire-api/      NestJS modular monolith  → Railway/Render
+swipehire-api/      NestJS modular monolith  → Render (free tier)
 swipehire-mobile/   Expo / React Native      → Expo Go or an EAS preview build
 docs/               The spec. Read docs/CLAUDE-DEMO.md first.
 docs/full-spec/     The original production spec — reference only, not this build's plan.
@@ -53,7 +53,7 @@ On a **physical** device, set `EXPO_PUBLIC_API_URL` in `swipehire-mobile/.env` t
 | Database | Postgres (Neon or Supabase), `pgvector` enabled |
 | Real-time | Socket.io, single instance |
 | Storage | Private S3 / Supabase Storage bucket, presigned URLs only |
-| Deploy | Railway or Render (backend), Expo Go / EAS preview (mobile) |
+| Deploy | Render free tier (backend), Expo Go / EAS preview (mobile) |
 
 No Redis, no queues, no AWS provisioning, no separate NLP service — those are production concerns
 that a demo never exercises. Module boundaries and table names are kept aligned with the production
@@ -98,7 +98,7 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
         plus the Matches unread badge and a way back from an exhausted deck
   - [ ] **DEMO-19** End-to-end dry run on a device
 - [~] Phase 7 — Deployment — config committed, accounts still needed
-  - [~] **DEMO-20** Backend: `railway.json` and `render.yaml` ready; needs a host account
+  - [~] **DEMO-20** Backend: `render.yaml` ready (free tier); needs a Render account
   - [~] **DEMO-21** Mobile: `eas.json` ready; needs an Expo account
   - See [`docs/DEPLOY.md`](docs/DEPLOY.md)
 

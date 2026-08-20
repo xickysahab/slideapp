@@ -1,7 +1,7 @@
 # Deploying the demo
 
-Two things ship: the backend to Railway or Render, and the mobile app through Expo. The database is
-already live on Supabase and doesn't move.
+Two things ship: the backend to Render's free tier, and the mobile app through Expo. The database
+is already live on Supabase and doesn't move.
 
 Everything below needs accounts that don't exist yet. The configuration is committed, so the work
 is account setup and pasting values, not writing anything.
@@ -10,26 +10,40 @@ is account setup and pasting values, not writing anything.
 
 ## 1. Backend
 
-Pick one host. Both configs are committed; the other one is simply ignored.
-
-### Railway
-
-1. New project → Deploy from GitHub → pick this repo.
-2. **Set the service root directory to `swipehire-api`.** The repo holds two projects, and without
-   this Railway builds the wrong one — the most common way this goes wrong.
-3. Paste the environment variables from §3 into the service's Variables tab.
-4. Deploy. `railway.json` already sets the build, the pre-deploy migration, the start command and
-   the health check.
-5. Generate a public domain from the service's Settings → Networking.
+Render, on its free tier. Chosen over Railway for one reason: Railway has no free tier any more,
+and this is a demo that gets torn down afterwards. `railway.json` stays committed as a paid
+fallback — see the end of this section.
 
 ### Render
 
 1. New → Blueprint → point it at this repo. `render.yaml` at the root does the rest, including
-   `rootDir`.
+   `rootDir` and `plan: free`.
 2. Render will prompt for every variable marked `sync: false`. Fill them in from §3.
 3. Deploy.
 
-### Either way, check it landed
+**What "free" costs you:** the service spins down after 15 minutes with no traffic, and the next
+request pays a cold start — roughly 40–60 seconds for this app, because the whole Node process has
+to boot and reconnect to Postgres. That is long enough to look broken in front of a client.
+
+It is not a problem if you plan for it. Hit `/health` a minute before the meeting starts and the
+service stays warm for the whole demo — see §5. The free tier also caps at 750 instance hours per
+month, which one always-on service does not exceed on its own.
+
+The other free-tier consequence: no `preDeployCommand`, so migrations never run automatically.
+`render.yaml` already omits it deliberately, and the database is already migrated. Future
+migrations run from a laptop — the command is at the bottom of `render.yaml`.
+
+### Railway
+
+`swipehire-api/railway.json` is committed and works, but **Railway has no free tier** — a trial
+credit, then $5/month. Only worth it if you want something Render's spin-down rules out.
+
+If you do switch: set the service root directory to `swipehire-api` (the repo holds two projects),
+paste §3 into Variables, and generate a domain under Settings → Networking. Note that Railway's
+builder reads `.nvmrc`, not `.node-version` — both files are committed with the same 22.11.0 for
+that reason, and the "if the build fails on `npm ci`" section below explains why the pin matters.
+
+### Check it landed
 
 ```bash
 curl https://<your-url>/health          # {"status":"ok",...}
@@ -175,6 +189,21 @@ demo database — but do run it *before* the meeting, not during.
 
 Then open the app on a phone and walk the journey yourself. That's DEMO-19, and it's the one thing
 no script covers: whether it comes in under five minutes and feels right in the hand.
+
+### Right before the demo
+
+Two things go to sleep on free tiers, and both take a minute to wake:
+
+```bash
+curl https://<your-url>/health/ready
+```
+
+That wakes the Render service (cold start, ~40–60s — wait for it to actually answer) and touches
+the database in the same call. Do this a few minutes before the meeting, not as it starts.
+
+Supabase also **pauses a free project after about a week of inactivity**, and that does not wake up
+from a request — it needs a click in the Supabase dashboard and a few minutes. If the demo is more
+than a few days after the last time you touched the database, check the dashboard the day before.
 
 ---
 
