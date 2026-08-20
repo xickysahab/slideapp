@@ -94,7 +94,8 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
 - [~] Phase 6 — Seed data & polish
   - [x] **DEMO-17** Seed script — 18 jobs, 18 candidates, a primed match, a live
         conversation, and both terminal states (`npm run seed`)
-  - [ ] **DEMO-18** Empty / loading / error states
+  - [x] **DEMO-18** Skeletons, empty and error states on every screen that fetches,
+        plus the Matches unread badge and a way back from an exhausted deck
   - [ ] **DEMO-19** End-to-end dry run on a device
 - [~] Phase 7 — Deployment — config committed, accounts still needed
   - [~] **DEMO-20** Backend: `railway.json` and `render.yaml` ready; needs a host account

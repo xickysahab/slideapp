@@ -20,8 +20,8 @@ Last updated: after the mobile app was wired to the real API and verified on the
 | 3 — Swipe deck UI | Done, wired to live endpoints |
 | 4 — Match creation, chat, matches list | Done |
 | 5 — Interview scheduling, outcome closure | Done |
-| 6 — Seed data | Done. States pass and the device dry run are not |
-| 7 — Deployment | Not started |
+| 6 — Seed data, states pass | Done. The device dry run is not |
+| 7 — Deployment | Config committed; needs a host account and an Expo account |
 
 The whole journey works end to end. What has **not** happened is a deployment, a run on a physical
 device, and a timed dry run — which is what DEMO-19 actually asks for and is explicitly the human's
@@ -47,16 +47,17 @@ Candidate: log in → deck loads 15 ranked listings → shortlist the top card �
 Recruiter: log in → dashboard of four listings → open a listing's deck → candidates ranked and
 blind-first.
 
+Interview propose → accept and the outcome sheet were driven through the interface afterwards, and
+both work — including the live socket update, where accepting a slot as the candidate flipped the
+recruiter's open chat to the confirmed state with no interaction at all.
+
 ### NOT verified in the UI
 
-Built, and covered by backend tests, but never driven through the interface:
+- **Resume upload.** Needs a PDF inside the simulator. The pipeline itself is covered by
+  `verify-resume.ts` against a real file.
 
-- Interview propose → accept (recruiter sheet, candidate slot card)
-- Resume upload (needs a PDF inside the simulator)
-- The outcome sheet (Hired / Not selected)
-
-The simulator's text injection drops characters on long strings, which made longer flows unreliable
-to drive. These are a couple of minutes to check by hand.
+The simulator's text injection drops characters on long strings, which makes long-form entry
+unreliable to drive. Worth knowing before trying to automate a flow that types a lot.
 
 ---
 
