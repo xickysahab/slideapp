@@ -47,7 +47,7 @@ function describe(card: SwipeCardData): string {
       `${j.title} at ${j.companyName}`,
       `${j.locationCity}, ${formatWorkMode(j.workMode)}`,
       formatSalaryRange(j.compMin, j.compMax),
-      formatExperience(j.experienceMinYears, j.experienceMaxYears),
+      formatExperience(j.experienceMinYears),
       `${j.matchScore} percent match`,
       `Skills: ${j.techStack.join(', ')}`,
     ].join('. ');
@@ -59,7 +59,7 @@ function describe(card: SwipeCardData): string {
     `${formatYears(c.yearsExperience)}, ${c.locationCity}`,
     `${c.matchScore} percent match`,
     `Skills: ${c.skills.join(', ')}`,
-    c.keyAchievement ?? '',
+    c.headline ?? '',
   ]
     .filter(Boolean)
     .join('. ');
@@ -118,21 +118,27 @@ function SwipeCardComponent({
           )}
         </Pressable>
 
+        {/* The two buttons share the row equally, so the flex lives on these wrappers rather than
+            on the buttons themselves. */}
         <View style={styles.actionRow}>
-          <Button
-            label="Pass"
-            variant="ghost"
-            onPress={handlePass}
-            fullWidth
-            accessibilityHint={`Skips this ${label}. It won't be shown again.`}
-          />
-          <Button
-            label="Shortlist"
-            variant="primary"
-            onPress={handleShortlist}
-            fullWidth
-            accessibilityHint={`Registers interest in this ${label}.`}
-          />
+          <View style={styles.actionSlot}>
+            <Button
+              label="Pass"
+              variant="ghost"
+              onPress={handlePass}
+              fullWidth
+              accessibilityHint={`Skips this ${label}. It won't be shown again.`}
+            />
+          </View>
+          <View style={styles.actionSlot}>
+            <Button
+              label="Shortlist"
+              variant="primary"
+              onPress={handleShortlist}
+              fullWidth
+              accessibilityHint={`Registers interest in this ${label}.`}
+            />
+          </View>
         </View>
 
         {interactive && (
@@ -158,6 +164,7 @@ const styles = StyleSheet.create({
     ...tokens.shadow.card,
     overflow: 'hidden',
   },
+  actionSlot: { flex: 1 },
   actionRow: {
     flexDirection: 'row',
     gap: tokens.spacing.md,

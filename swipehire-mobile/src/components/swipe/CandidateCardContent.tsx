@@ -43,12 +43,11 @@ function CandidateCardContentComponent({ candidate }: CandidateCardContentProps)
       </View>
 
       <Text style={[type('h3'), styles.role]} numberOfLines={1}>
-        {candidate.currentTitle}
+        {candidate.currentTitle ?? 'Role not stated'}
       </Text>
 
       <Text style={[type('dataS'), styles.meta]}>
-        {formatYears(candidate.yearsExperience)} · {candidate.locationCity} (
-        {formatWorkMode(candidate.preferredWorkMode)})
+        {formatYears(candidate.yearsExperience)} · {formatWorkMode(candidate.preferredWorkMode)}
       </Text>
 
       <View style={styles.chipRow}>
@@ -58,11 +57,11 @@ function CandidateCardContentComponent({ candidate }: CandidateCardContentProps)
         {overflow > 0 && <SkillChip label={`+${overflow}`} />}
       </View>
 
-      {candidate.keyAchievement ? (
+      {candidate.headline ? (
         <View style={styles.achievementRow}>
           <View style={styles.achievementMark} />
           <Text style={[type('bodyM'), styles.achievement]} numberOfLines={1}>
-            {candidate.keyAchievement}
+            {candidate.headline}
           </Text>
         </View>
       ) : null}

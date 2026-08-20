@@ -27,16 +27,23 @@ export function formatSalaryRange(min: number | null, max: number | null): strin
   return `${toLakhString((min ?? max) as number)}+`;
 }
 
-export function formatWorkMode(mode: WorkMode): string {
+/**
+ * The API returns null for anything the poster left blank, so every formatter here takes null and
+ * decides what that reads as. Deciding it once means no screen has to guard before calling.
+ */
+export function formatWorkMode(mode: WorkMode | null): string {
+  if (!mode) return 'Not specified';
   return { remote: 'Remote', hybrid: 'Hybrid', onsite: 'On-site' }[mode];
 }
 
-export function formatExperience(min: number, max?: number | null): string {
+export function formatExperience(min: number | null, max?: number | null): string {
+  if (min == null) return 'Any experience';
   if (max != null && max !== min) return `${min}–${max} yrs exp`;
   return `${min}+ yrs exp`;
 }
 
-export function formatYears(years: number): string {
+export function formatYears(years: number | null): string {
+  if (years == null) return 'Experience not stated';
   return `${years} yr${years === 1 ? '' : 's'} exp`;
 }
 

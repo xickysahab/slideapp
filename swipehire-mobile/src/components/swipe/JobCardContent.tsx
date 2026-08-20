@@ -67,7 +67,7 @@ function JobCardContentComponent({ job }: JobCardContentProps) {
       </View>
 
       <Text style={[type('dataS'), styles.meta]}>
-        {formatExperience(job.experienceMinYears, job.experienceMaxYears)} · Posted{' '}
+        {formatExperience(job.experienceMinYears)} · Posted{' '}
         {formatRelativeTime(job.postedAt)}
       </Text>
 

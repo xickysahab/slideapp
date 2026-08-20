@@ -21,14 +21,31 @@ export interface SkillChipProps {
   label: string;
   variant?: SkillChipVariant;
   onPress?: () => void;
+  /**
+   * Turns the chip into a removable tag. Used wherever a list is being edited rather than read —
+   * the resume review screen and the job's tech stack picker.
+   */
+  onRemove?: () => void;
 }
 
-function SkillChipComponent({ label, variant = 'default', onPress }: SkillChipProps) {
+function SkillChipComponent({ label, variant = 'default', onPress, onRemove }: SkillChipProps) {
   const content = (
-    <View style={[styles.chip, VARIANT_CONTAINER[variant]]}>
+    <View style={[styles.chip, VARIANT_CONTAINER[variant], onRemove && styles.chipRemovable]}>
       <Text style={[type('caption'), VARIANT_TEXT[variant]]} numberOfLines={1}>
         {label}
       </Text>
+      {onRemove && (
+        <Pressable
+          onPress={onRemove}
+          accessibilityRole="button"
+          accessibilityLabel={`Remove ${label}`}
+          // The chip is ~28px tall; hitSlop brings the tap target to 44pt without resizing it.
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          style={styles.removeHit}
+        >
+          <Text style={[type('caption'), VARIANT_TEXT[variant], styles.removeGlyph]}>×</Text>
+        </Pressable>
+      )}
     </View>
   );
 
@@ -56,6 +73,15 @@ const styles = StyleSheet.create({
     borderRadius: tokens.radius.pill,
     borderWidth: 1,
   },
+  chipRemovable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: tokens.spacing.sm,
+    paddingRight: tokens.spacing.sm,
+  },
+  removeHit: { paddingHorizontal: tokens.spacing.xs },
+  // Nudged up because the multiplication sign sits low in the line box at this size.
+  removeGlyph: { fontSize: 16, lineHeight: 18, marginTop: -1 },
 });
 
 const VARIANT_CONTAINER = StyleSheet.create({

@@ -81,7 +81,14 @@ const styles = StyleSheet.create({
     borderRadius: tokens.radius.md,
     borderWidth: 1,
   },
-  fullWidth: { alignSelf: 'stretch', flex: 1 },
+  /**
+   * Stretch only — no `flex: 1`.
+   *
+   * With flex, a button inside a column collapses to zero height and renders as a hairline, since
+   * flex distributes the *remaining* space and a content-sized card has none. Buttons that need to
+   * share a row get their flex from a wrapper on the parent's side, where the row actually is.
+   */
+  fullWidth: { alignSelf: 'stretch' },
   labelWrap: { flexDirection: 'row', alignItems: 'center', gap: tokens.spacing.sm },
   disabled: { opacity: 0.4 },
 });
