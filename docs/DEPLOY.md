@@ -40,6 +40,24 @@ curl https://<your-url>/health/ready    # {"status":"ok","database":"reachable",
 transient database blip can't get the container killed and restarted into the same blip.
 `/health/ready` is the one that checks the database.
 
+### If it builds but can't reach the database
+
+`ENETUNREACH` against an IPv6 address means the connection string points at Supabase's **direct**
+connection, which for newer projects resolves to IPv6 only. Render's outbound is IPv4.
+
+Use the **session pooler** string instead — Supabase dashboard → Settings → Database → Connection
+string → Session pooler. Two things change beyond the host:
+
+    host: db.<ref>.supabase.co        ->  aws-0-<region>.pooler.supabase.com
+    user: postgres                    ->  postgres.<ref>
+
+Session pooler, not transaction pooler. Transaction mode (port 6543) is built for short-lived
+serverless connections and drops session-level state; this backend is a long-running process with
+its own connection pool.
+
+The direct connection still works from a laptop with IPv6, which is exactly why this doesn't show
+up until it's deployed.
+
 ### If the build fails on `nest: not found`
 
 The install skipped devDependencies. `NODE_ENV=production` makes npm omit them, and the build
