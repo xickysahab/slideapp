@@ -91,9 +91,18 @@ export function MatchOutcomeSheet({
           {error && <Text style={[type('bodyM'), styles.error]}>{error}</Text>}
 
           <View style={styles.actions}>
+            {/* Neutral until a choice is made. Falling through to the destructive style while
+                nothing is selected reads as an armed destructive action, which is the last thing
+                an irreversible step should look like before you've picked anything. */}
             <Button
-              label={choice === 'hired' ? 'Mark as hired' : 'Close this match'}
-              variant={choice === 'hired' ? 'primary' : 'destructive'}
+              label={
+                choice === null
+                  ? 'Choose an outcome'
+                  : choice === 'hired'
+                    ? 'Mark as hired'
+                    : 'Close this match'
+              }
+              variant={choice === 'not_selected' ? 'destructive' : 'primary'}
               onPress={() => choice && onSubmit(choice, note.trim() || undefined)}
               disabled={!choice}
               loading={busy}
