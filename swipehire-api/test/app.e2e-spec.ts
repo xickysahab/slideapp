@@ -14,7 +14,7 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.setGlobalPrefix('api', { exclude: ['health'] });
+    app.setGlobalPrefix('api', { exclude: ['health', 'health/*path'] });
     await app.init();
   });
 

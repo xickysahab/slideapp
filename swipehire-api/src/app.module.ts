@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { dataSourceOptions } from './config/data-source';
 import { HealthModule } from './health/health.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProfileModule } from './modules/profile/profile.module';
@@ -19,6 +21,9 @@ import { ResumeModule } from './modules/resume/resume.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env.local', '.env'] }),
+    // Migrations are run explicitly via `npm run migration:run`, never on boot — a deploy should
+    // not be able to alter the schema as a side effect of restarting.
+    TypeOrmModule.forRoot(dataSourceOptions),
     HealthModule,
     AuthModule,
     ProfileModule,

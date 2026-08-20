@@ -63,11 +63,15 @@ spec so re-adding that infrastructure later is additive rather than a rewrite.
 Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticket-List.md).
 
 - [x] **DEMO-00** Repo & environment scaffolding
-- [ ] **DEMO-01** Database provisioning
+- [x] **DEMO-01** Database provisioning — Supabase Postgres 17.6, 9 tables, pgvector enabled
 - [ ] **DEMO-02** File storage setup
 - [ ] Phase 1 — Auth & profiles (DEMO-03 → 05)
 - [ ] Phase 2 — Jobs & discovery (DEMO-06 → 08)
-- [ ] Phase 3 — Swipe deck UI (DEMO-09 → 11)
+- [ ] Phase 3 — Swipe deck UI
+  - [~] **DEMO-09** SwipeCard + MatchSeal + gesture — built and bundling; the
+        "60fps on a real device" criterion is unverified until Xcode is installed
+  - [ ] **DEMO-10** Rolling window wired to real endpoints
+  - [ ] **DEMO-11** Card content from seed data
 - [ ] Phase 4 — Matching & chat (DEMO-12 → 15)
 - [ ] Phase 5 — Interview scheduling + outcome (DEMO-16, 16b)
 - [ ] Phase 6 — Seed data & polish (DEMO-17 → 19)

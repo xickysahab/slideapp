@@ -34,7 +34,9 @@ async function bootstrap() {
   app.enableCors({ origin: origins.length ? origins : false, credentials: true });
 
   // `/health` stays at the root so platform health checks (DEMO-20) hit a stable, prefix-free path.
-  app.setGlobalPrefix('api', { exclude: ['health'] });
+  // Both entries are needed: `exclude` matches exact paths, so without the named wildcard
+  // (Express 5 / path-to-regexp v8 syntax) `/health/ready` would land at `/api/health/ready`.
+  app.setGlobalPrefix('api', { exclude: ['health', 'health/*path'] });
 
   const port = Number(process.env.PORT ?? 3000);
   // Bind 0.0.0.0 so a phone on the same LAN can reach the dev server during Expo Go testing.
