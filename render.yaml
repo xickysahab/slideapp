@@ -1,25 +1,22 @@
-# Render blueprint — the alternative to railway.json, pick one.
+# Render blueprint.
 #
-# Lives at the repo root because Render reads the blueprint from there, and `rootDir` is what
-# points it at the backend. The mobile app is not deployed here; it ships through Expo.
+# Lives at the repo root because Render reads the blueprint from there; `rootDir` is what points it
+# at the backend. The mobile app isn't deployed here — it ships through Expo.
 services:
   - type: web
     name: swipehire-api
     runtime: node
     plan: free
+    region: singapore
     rootDir: swipehire-api
     buildCommand: npm ci && npm run build
-    # Migrations run before the new instance starts taking traffic. Deliberately a separate command
-    # rather than `migrationsRun: true` in the data source — a deploy should not be able to alter
-    # the schema as an invisible side effect of restarting.
-    preDeployCommand: npm run migration:run
     startCommand: npm run start:prod
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
-      # Every value below is secret or environment-specific and must be set in the dashboard.
-      # `sync: false` is what tells Render to prompt rather than to bake a value into this file.
+      # Every value below is secret or environment-specific. `sync: false` makes Render prompt for
+      # it rather than baking a value into a file that lives in a public repo.
       - key: DATABASE_URL
         sync: false
       - key: JWT_ACCESS_SECRET
@@ -32,6 +29,11 @@ services:
         sync: false
       - key: SUPABASE_STORAGE_BUCKET
         value: resumes
-      # Comma-separated. Only governs browser origins; a native app doesn't enforce CORS.
+      # Comma-separated. Empty is correct for a phone-only demo — a native app doesn't enforce CORS,
+      # and leaving it open would mean the deployed backend answers arbitrary browser origins.
       - key: CORS_ORIGINS
         sync: false
+# No preDeployCommand: Render only runs those on paid instance types, and the database this points
+# at is already migrated. Future migrations run with
+#   DATABASE_URL="<deployed connection string>" npm run migration:run
+# from a laptop, which is also the only way to see the output if one fails.
