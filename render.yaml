@@ -9,7 +9,10 @@ services:
     plan: free
     region: singapore
     rootDir: swipehire-api
-    buildCommand: npm ci && npm run build
+    # --include=dev is required. NODE_ENV=production (below) makes npm skip devDependencies, and
+    # the build itself needs them — @nestjs/cli and typescript are both dev. Without this the
+    # install succeeds with ~237 packages instead of ~806 and the build dies on 'nest: not found'.
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm run start:prod
     healthCheckPath: /health
     envVars:
