@@ -44,10 +44,18 @@ async function call(method: string, path: string, body?: unknown, token?: string
   return { status: res.status, body: text ? JSON.parse(text) : null };
 }
 
+/**
+ * Returns the id alongside the token.
+ *
+ * Earlier versions located the test candidate in the recruiter's deck by first name. That worked
+ * until the seed data introduced a candidate with the same one, at which point the recruiter
+ * swiped on the wrong person and every assertion after it failed in a way that pointed nowhere
+ * near the cause. Fixtures share a database with seed data; they must not share identifiers.
+ */
 async function signup(email: string, role: 'candidate' | 'recruiter') {
   const res = await call('POST', '/auth/signup', { email, password, role });
   if (res.status !== 201) throw new Error(`signup ${email} failed: ${res.status}`);
-  return res.body.accessToken as string;
+  return { token: res.body.accessToken as string, id: res.body.user.id as string };
 }
 
 function connect(token: string): Promise<Socket> {
@@ -74,12 +82,12 @@ async function main() {
   console.log(`base: ${BASE}\n`);
 
   // ---- setup --------------------------------------------------------------
-  const recruiter = await signup(emails.recruiter, 'recruiter');
-  const candidate = await signup(emails.candidate, 'candidate');
-  const bystander = await signup(emails.bystander, 'candidate');
+  const { token: recruiter } = await signup(emails.recruiter, 'recruiter');
+  const { token: candidate, id: candidateId } = await signup(emails.candidate, 'candidate');
+  const { token: bystander } = await signup(emails.bystander, 'candidate');
 
   await call('PATCH', '/profile', { fullName: 'Rahul Mehta' }, recruiter);
-  await call('PUT', '/profile/company', { name: 'Razorpay', industry: 'Fintech' }, recruiter);
+  const company = await call('PUT', '/profile/company', { name: `Loop Test Co ${stamp}`, industry: 'Fintech' }, recruiter);
   await call(
     'PATCH',
     '/profile',
@@ -124,7 +132,7 @@ async function main() {
   const secondSwipe = await call(
     'POST',
     '/swipes',
-    { targetId: (await call('GET', `/discover/candidates?jobId=${jobId}`, undefined, recruiter)).body.items.find((c: { firstName: string }) => c.firstName === 'Aditi').id, targetType: 'candidate', direction: 'right', jobId },
+    { targetId: candidateId, targetType: 'candidate', direction: 'right', jobId },
     recruiter,
   );
   check('recruiter right-swipes the candidate', secondSwipe.status === 200, `got ${secondSwipe.status}`);
@@ -244,7 +252,9 @@ async function main() {
   await db.query('DELETE FROM matches WHERE job_id = $1', [jobId]);
   await db.query('DELETE FROM jobs WHERE id = $1', [jobId]);
   await db.query('DELETE FROM recruiter_profiles WHERE user_id IN (SELECT id FROM users WHERE email = ANY($1))', [all]);
-  await db.query("DELETE FROM companies WHERE name = 'Razorpay'");
+  // By id, not by name: deleting by name would take out the seed's company of the same name,
+  // which has jobs pointing at it.
+  await db.query('DELETE FROM companies WHERE id = $1', [company.body.id]);
   const removed = await db.query('DELETE FROM users WHERE email = ANY($1)', [all]);
   await db.end();
   console.log(`\ncleanup: removed ${removed.rowCount} test users`);

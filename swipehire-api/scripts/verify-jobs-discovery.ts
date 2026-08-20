@@ -68,8 +68,11 @@ async function main() {
   const beforeCompany = await call('POST', '/jobs', { title: 'Backend Engineer', techStack: ['Node.js'] }, recruiter);
   check('posting before company setup returns 404 with guidance', beforeCompany.status === 404, `got ${beforeCompany.status}`);
 
-  await call('PUT', '/profile/company', { name: 'Razorpay', industry: 'Fintech' }, recruiter);
-  await call('PUT', '/profile/company', { name: 'Other Co' }, otherRecruiter);
+  // Names carry the run's timestamp so a fixture can never collide with seed data — an earlier
+  // version used "Razorpay", which the seed also creates, and cleanup then tried to delete a
+  // company that had real jobs pointing at it.
+  const company = await call('PUT', '/profile/company', { name: `Jobs Test Co ${stamp}`, industry: 'Fintech' }, recruiter);
+  const otherCompany = await call('PUT', '/profile/company', { name: `Other Test Co ${stamp}` }, otherRecruiter);
 
   // --- create --------------------------------------------------------------
   const created = await call(
@@ -170,7 +173,8 @@ async function main() {
   await db.connect();
   await db.query('DELETE FROM jobs WHERE recruiter_id IN (SELECT id FROM users WHERE email = ANY($1))', [all]);
   await db.query('DELETE FROM recruiter_profiles WHERE user_id IN (SELECT id FROM users WHERE email = ANY($1))', [all]);
-  await db.query("DELETE FROM companies WHERE name IN ('Razorpay', 'Other Co')");
+  // By id, so nothing outside this run is touched.
+  await db.query('DELETE FROM companies WHERE id = ANY($1)', [[company.body.id, otherCompany.body.id]]);
   const removed = await db.query('DELETE FROM users WHERE email = ANY($1)', [all]);
   await db.end();
   console.log(`\ncleanup: removed ${removed.rowCount} test users`);
