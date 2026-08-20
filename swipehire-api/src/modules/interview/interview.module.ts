@@ -1,14 +1,24 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { Interview } from '../../database/entities/interview.entity';
+import { SwipeMatchModule } from '../swipe-match/swipe-match.module';
+import { InterviewController } from './interview.controller';
+import { InterviewService } from './interview.service';
 
 /**
  * InterviewModule — see docs/SwipeHire-DEMO-Architecture.md §2.
  *
  * Owns tables: interviews
- * Built in:    DEMO-16
+ * Built in:    propose → accept, one round
  *
- * Module boundaries are kept identical to the full architecture doc on purpose: other modules
- * call this one's service interface, never its tables directly, even though this is a single
- * deployable. That boundary is what makes a later service extraction mechanical.
+ * Calendar sync is not here and is not coming for this build (Demo PRD §6). The flow goes
+ * candidate-confirms → Interview Scheduled directly, with the confirmed slot shown in the thread.
  */
-@Module({})
+@Module({
+  imports: [TypeOrmModule.forFeature([Interview]), SwipeMatchModule],
+  controllers: [InterviewController],
+  providers: [InterviewService],
+  exports: [InterviewService],
+})
 export class InterviewModule {}

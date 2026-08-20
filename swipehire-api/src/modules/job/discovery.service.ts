@@ -7,7 +7,7 @@ import { Job } from '../../database/entities/job.entity';
 import { Profile } from '../../database/entities/profile.entity';
 import type { UserRole } from '../../database/entities/user.entity';
 import { SwipeService } from '../swipe-match/swipe.service';
-import { computeMatch, type MatchBreakdown } from './match-score';
+import { computeMatch, type MatchBreakdown } from '../../shared/matching/match-score';
 
 /** Cards per page. Matches the full spec's 20 (Architecture §8 / Frontend Spec §8). */
 const PAGE_SIZE = 20;

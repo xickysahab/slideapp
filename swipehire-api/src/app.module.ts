@@ -11,6 +11,7 @@ import { SwipeMatchModule } from './modules/swipe-match/swipe-match.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { InterviewModule } from './modules/interview/interview.module';
 import { ResumeModule } from './modules/resume/resume.module';
+import { RealtimeModule } from './shared/realtime/realtime.module';
 import { StorageModule } from './shared/storage/storage.module';
 
 /**
@@ -26,6 +27,7 @@ import { StorageModule } from './shared/storage/storage.module';
     // not be able to alter the schema as a side effect of restarting.
     TypeOrmModule.forRoot(dataSourceOptions),
     StorageModule,
+    RealtimeModule,
     HealthModule,
     AuthModule,
     ProfileModule,

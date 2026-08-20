@@ -86,8 +86,14 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
         can't show feel.
   - [ ] **DEMO-10** Rolling window wired to real endpoints
   - [ ] **DEMO-11** Card content from seed data
-- [ ] Phase 4 — Matching & chat (DEMO-12 → 15)
-- [ ] Phase 5 — Interview scheduling + outcome (DEMO-16, 16b)
+- [x] Phase 4 — Matching & chat (backend)
+  - [x] **DEMO-12** Swipe recording + server-derived match creation
+  - [x] **DEMO-14** Chat over Socket.io, single instance
+  - [x] **DEMO-15** Matches list with previews and unread counts
+- [x] Phase 5 — Interview scheduling + outcome (backend)
+  - [x] **DEMO-16** Propose → accept, one round
+  - [x] **DEMO-16b** Hired / Not Selected closure
+  - Whole journey verified end to end: `scripts/verify-loop.ts`, 39 checks incl. sockets
 - [ ] Phase 6 — Seed data & polish (DEMO-17 → 19)
 - [ ] Phase 7 — Deployment (DEMO-20 → 21)
 
