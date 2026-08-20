@@ -127,6 +127,15 @@ function MatchSealComponent({ matchPercent, size = 'md', animateIn = false }: Ma
   // 32px leaves room for two digits but not a percent sign as well.
   const label = size === 'sm' ? `${pct}` : `${pct}%`;
 
+  /**
+   * At 32px there is roughly 20pt of clear space inside the ring, and "100" in 13pt mono is wider
+   * than that — it collided with the arc on a perfect match, which is exactly the score most worth
+   * showing off. Only the three-digit case needs the reduction, so two-digit scores keep the
+   * spec's size.
+   */
+  const labelOverride =
+    size === 'sm' && label.length > 2 ? { fontSize: 11, lineHeight: 13 } : null;
+
   return (
     <View
       style={{ width: px, height: px }}
@@ -191,7 +200,11 @@ function MatchSealComponent({ matchPercent, size = 'md', animateIn = false }: Ma
       </Svg>
 
       <View style={styles.labelWrap} pointerEvents="none">
-        <Text style={[labelStyle, styles.label]} numberOfLines={1} allowFontScaling={false}>
+        <Text
+          style={[labelStyle, styles.label, labelOverride]}
+          numberOfLines={1}
+          allowFontScaling={false}
+        >
           {label}
         </Text>
       </View>

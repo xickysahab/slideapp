@@ -54,6 +54,7 @@ export function ProfileScreen() {
               </Text>
               <View style={styles.previewCard}>
                 <CandidateCardContent
+                  showMatchSeal={false}
                   candidate={{
                     id: c.userId,
                     firstName: data.profile?.fullName?.split(' ')[0] ?? '',
@@ -65,7 +66,7 @@ export function ProfileScreen() {
                     preferredWorkMode: c.preferredWorkMode,
                     skills: c.skills,
                     // Nothing to match against outside a specific listing, so no chips are
-                    // highlighted here — the preview shows the shape, not a score.
+                    // highlighted and no seal is shown — the preview is the shape, not a score.
                     matchedSkills: [],
                     hasResume: c.resumeS3Key !== null,
                     matchScore: 0,

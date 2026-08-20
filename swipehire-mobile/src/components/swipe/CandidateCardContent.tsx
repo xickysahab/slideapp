@@ -20,9 +20,18 @@ import { MatchSeal } from './MatchSeal';
 
 export interface CandidateCardContentProps {
   candidate: CandidateCardData;
+  /**
+   * Hides the score. A match score only means something relative to a specific listing, so the
+   * "how recruiters see you" preview on a candidate's own profile has none to show — and rendering
+   * a 0% there reads as "you are a bad match", which is both wrong and discouraging.
+   */
+  showMatchSeal?: boolean;
 }
 
-function CandidateCardContentComponent({ candidate }: CandidateCardContentProps) {
+function CandidateCardContentComponent({
+  candidate,
+  showMatchSeal = true,
+}: CandidateCardContentProps) {
   const { visible, overflow } = rankSkills(candidate.skills, candidate.matchedSkills);
 
   return (
@@ -39,7 +48,7 @@ function CandidateCardContentComponent({ candidate }: CandidateCardContentProps)
           </Text>
         </View>
 
-        <MatchSeal matchPercent={candidate.matchScore} size="md" animateIn />
+        {showMatchSeal && <MatchSeal matchPercent={candidate.matchScore} size="md" animateIn />}
       </View>
 
       <Text style={[type('h3'), styles.role]} numberOfLines={1}>
@@ -115,5 +124,8 @@ const styles = StyleSheet.create({
 
 export const CandidateCardContent = memo(
   CandidateCardContentComponent,
-  (a, b) => a.candidate.id === b.candidate.id && a.candidate.matchScore === b.candidate.matchScore,
+  (a, b) =>
+    a.candidate.id === b.candidate.id &&
+    a.candidate.matchScore === b.candidate.matchScore &&
+    a.showMatchSeal === b.showMatchSeal,
 );
