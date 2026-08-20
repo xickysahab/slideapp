@@ -37,9 +37,9 @@ Mobile, in a second terminal:
 cd swipehire-mobile && cp .env.example .env && npm install && npx expo start
 ```
 
-`http://localhost:3000/health` returns liveness; `/health/ready` also checks the database.
-The app currently opens on the DEMO-09 swipe-deck harness, which runs on mock data and needs no
-backend.
+`http://localhost:3000/health` returns liveness; `/health/ready` also checks the database. Seed the
+database with `npm run seed` in `swipehire-api`, then sign in with one of the accounts below — the
+app talks to the API for everything, so an unseeded database means an empty deck.
 
 On a **physical** device, set `EXPO_PUBLIC_API_URL` in `swipehire-mobile/.env` to your Mac's LAN IP
 (`http://192.168.x.x:3000`) — `localhost` resolves to the phone, not your machine.
@@ -67,12 +67,11 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
 - [x] **DEMO-01** Database provisioning — Supabase Postgres 17.6, 9 tables, pgvector enabled
 - [x] **DEMO-02** File storage — private Supabase bucket, PDF-only, signed URLs both ways
       (`npx ts-node scripts/verify-storage.ts` re-checks the round trip)
-- [ ] Phase 1 — Auth & profiles
+- [x] Phase 1 — Auth & profiles
   - [x] **DEMO-03** Auth — email/password, JWT access + revocable refresh
         (`scripts/verify-auth.ts`, 21 checks). Google sign-in is implemented server-side
         but deliberately not wired into the client — see CLAUDE.md.
-  - [~] **DEMO-04** Profile API done and verified (`scripts/verify-profile.ts`).
-        Role-select and profile-form screens still to build.
+  - [x] **DEMO-04** Profile API and the role-select / setup screens
   - [x] **DEMO-05** Resume upload, PDF text extraction, skill matching
         (`scripts/verify-resume.ts <file.pdf>` + 11 unit tests on the matcher)
 - [x] Phase 2 — Jobs & discovery
@@ -80,17 +79,15 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
   - [x] **DEMO-07** Match scoring — skills 80% / experience 20%, 11 unit tests
   - [x] **DEMO-08** Discovery feeds, blind-first enforced server-side
         (`scripts/verify-jobs-discovery.ts`, 29 checks)
-- [ ] Phase 3 — Swipe deck UI
-  - [~] **DEMO-09** SwipeCard + MatchSeal + gesture — renders correctly on the iOS
-        simulator. The "60fps" criterion still needs a human to drag a card; screenshots
-        can't show feel.
-  - [ ] **DEMO-10** Rolling window wired to real endpoints
-  - [ ] **DEMO-11** Card content from seed data
-- [x] Phase 4 — Matching & chat (backend)
+- [x] Phase 3 — Swipe deck UI
+  - [x] **DEMO-09** SwipeCard, MatchSeal, gesture stack
+  - [x] **DEMO-10** Deck wired to the real discovery endpoints
+  - [x] **DEMO-11** Card content from live data
+- [x] Phase 4 — Matching & chat
   - [x] **DEMO-12** Swipe recording + server-derived match creation
   - [x] **DEMO-14** Chat over Socket.io, single instance
   - [x] **DEMO-15** Matches list with previews and unread counts
-- [x] Phase 5 — Interview scheduling + outcome (backend)
+- [x] Phase 5 — Interview scheduling + outcome
   - [x] **DEMO-16** Propose → accept, one round
   - [x] **DEMO-16b** Hired / Not Selected closure
   - Whole journey verified end to end: `scripts/verify-loop.ts`, 39 checks incl. sockets
