@@ -56,3 +56,6 @@ temp/
 
 # Working screenshots from simulator runs — not part of the build
 screenshots/
+
+# Values to paste into the Render dashboard — never committed
+RENDER-ENV.txt
