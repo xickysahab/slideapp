@@ -66,7 +66,12 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
 - [x] **DEMO-01** Database provisioning — Supabase Postgres 17.6, 9 tables, pgvector enabled
 - [x] **DEMO-02** File storage — private Supabase bucket, PDF-only, signed URLs both ways
       (`npx ts-node scripts/verify-storage.ts` re-checks the round trip)
-- [ ] Phase 1 — Auth & profiles (DEMO-03 → 05)
+- [ ] Phase 1 — Auth & profiles
+  - [~] **DEMO-03** Auth — email/password, JWT access + revocable refresh, done and
+        verified (`npx ts-node scripts/verify-auth.ts`, server running). Google OAuth
+        still to do; it needs credentials from Google Cloud Console.
+  - [ ] **DEMO-04** Role selection & basic profile
+  - [ ] **DEMO-05** Resume upload & parsing
 - [ ] Phase 2 — Jobs & discovery (DEMO-06 → 08)
 - [ ] Phase 3 — Swipe deck UI
   - [~] **DEMO-09** SwipeCard + MatchSeal + gesture — built and bundling; the
