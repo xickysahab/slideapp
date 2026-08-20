@@ -51,3 +51,9 @@ first drop) before compromising either of these.
   (Hired / Not Selected → archive / close + optional feedback). See `DEMO-16b` in the Journey Map.
 - **Scope confirmed still cut:** biometric auth, recruiter verification workflow, calendar sync,
   real push notifications (APNs/FCM). See the Journey Map for what replaces each in the demo.
+- **Google sign-in: backend only, client side not built.** `POST /auth/google` verifies a Google ID
+  token properly and is ready; nothing calls it. Google's flow needs a custom-scheme redirect that
+  Expo Go can't provide now that Expo's auth proxy is gone, so wiring the client would mean moving
+  the whole build off Expo Go onto EAS dev builds — slower iteration, for a second login button.
+  Demo PRD §2 row 1 asks for "email+password **or** Google sign-in", and email/password is done and
+  tested, so scope is met. Revisit only if the EAS decision gets made for other reasons.

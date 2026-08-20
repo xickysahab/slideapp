@@ -70,7 +70,8 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
   - [~] **DEMO-03** Auth — email/password, JWT access + revocable refresh, done and
         verified (`npx ts-node scripts/verify-auth.ts`, server running). Google OAuth
         still to do; it needs credentials from Google Cloud Console.
-  - [ ] **DEMO-04** Role selection & basic profile
+  - [~] **DEMO-04** Profile API done and verified (`scripts/verify-profile.ts`).
+        Role-select and profile-form screens still to build.
   - [ ] **DEMO-05** Resume upload & parsing
 - [ ] Phase 2 — Jobs & discovery (DEMO-06 → 08)
 - [ ] Phase 3 — Swipe deck UI
