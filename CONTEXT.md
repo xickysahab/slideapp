@@ -174,7 +174,7 @@ tests for every one of these cases.
 | Supabase (Postgres + Storage) | Live. Project ref is in `swipehire-api/.env`, which is git-ignored. |
 | GitHub | `github.com/xickysahab/slideapp`, **public** — chosen knowingly after the tradeoffs were laid out. |
 | Google OAuth | Not created. Only needed if the client-side decision is revisited. |
-| Render | Not created. Needed for DEMO-20. Free tier — no card required. Railway was considered and rejected on cost; see §2. |
+| Render | **Live**, free tier, Singapore. Service URL is in `RENDER-ENV.txt` (git-ignored) rather than the README, because this repo is public and the README already carries the demo password. Railway was considered and rejected on cost; see §2. |
 | Expo / EAS | Not created. Needed for DEMO-21. |
 
 ### Secrets
@@ -202,8 +202,14 @@ anything missed.
 **DEMO-19 — dry run.** The ticket says "Tool: You, not the AI tools". Run the full journey on a real
 phone, both roles, timed, and confirm it comes in under five minutes with no placeholder content.
 
-**DEMO-20 — backend deploy.** Render free tier, pointed at the same Supabase database. The env vars
-are listed in `docs/BACKEND.md` §11. `start:prod` runs `node dist/main`, which works now.
+~~**DEMO-20 — backend deploy.**~~ Done. Render free tier, same Supabase database.
+`verify:loop` passes 39/39 against the deployed URL, including the live socket events — the one
+thing this deploy genuinely changed, since WSS now goes through Render's proxy rather than a local
+port. `swipehire-mobile/.env` points at it.
+
+The deploy cost two rounds: `DATABASE_URL` has to be Supabase's **session pooler**, because the
+direct host has no A record at all (`dig A db.<ref>.supabase.co` returns nothing) and Render's
+outbound is IPv4. No code fix exists for that — it is purely which string is in the dashboard.
 
 **DEMO-21 — mobile build.** Either confirm Expo Go works against the deployed backend, or produce an
 EAS preview build. Remember `EXPO_PUBLIC_API_URL` has to point at the deployed URL, not localhost.

@@ -97,8 +97,10 @@ Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticke
   - [x] **DEMO-18** Skeletons, empty and error states on every screen that fetches,
         plus the Matches unread badge and a way back from an exhausted deck
   - [ ] **DEMO-19** End-to-end dry run on a device
-- [~] Phase 7 — Deployment — config committed, accounts still needed
-  - [~] **DEMO-20** Backend: `render.yaml` ready (free tier); needs a Render account
+- [~] Phase 7 — Deployment
+  - [x] **DEMO-20** Backend live on Render's free tier. Verified against the deployed URL:
+        both decks populated, and `verify:loop` passes all 39 checks including the live
+        socket events over WSS. The URL is not in the repo — see `RENDER-ENV.txt`.
   - [~] **DEMO-21** Mobile: `eas.json` ready; needs an Expo account
   - See [`docs/DEPLOY.md`](docs/DEPLOY.md)
 
