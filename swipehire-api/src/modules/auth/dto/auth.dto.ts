@@ -1,4 +1,4 @@
-import { IsEmail, IsIn, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 /**
  * Request shapes for the auth endpoints.
@@ -41,4 +41,19 @@ export class LoginDto {
 export class RefreshDto {
   @IsString()
   refreshToken!: string;
+}
+
+export class GoogleAuthDto {
+  /** The ID token from Google's sign-in on the client. Verified server-side before anything is trusted. */
+  @IsString()
+  idToken!: string;
+
+  /**
+   * Required only the first time a given Google account signs in, since a new user has to land on
+   * one side of the marketplace. Ignored for an existing account — the role is already settled, and
+   * honouring it here would let a client flip its own role by re-authenticating.
+   */
+  @IsOptional()
+  @IsIn(['candidate', 'recruiter'])
+  role?: 'candidate' | 'recruiter';
 }

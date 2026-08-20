@@ -1,5 +1,10 @@
 import { hash as argonHash, verify as argonVerify } from '@node-rs/argon2';
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +14,7 @@ import { IsNull, Repository } from 'typeorm';
 import { RefreshToken } from '../../database/entities/refresh-token.entity';
 import { User, type UserRole } from '../../database/entities/user.entity';
 import type { LoginDto, SignupDto } from './dto/auth.dto';
+import type { GoogleIdentity } from './google-auth.service';
 
 export interface AuthTokens {
   accessToken: string;
@@ -70,6 +76,41 @@ export class AuthService {
     }
 
     return this.issueTokens(user);
+  }
+
+  /**
+   * Signs in (or registers) through a Google ID token that GoogleAuthService has already verified.
+   *
+   * Accounts are matched on the verified email address, so signing up with a password and later
+   * using "Continue with Google" lands on the same account rather than creating a second one. That
+   * only holds because the email came from a token Google signed and `email_verified` was checked —
+   * matching on a client-supplied address would be an account takeover.
+   */
+  async loginWithGoogle(
+    identity: GoogleIdentity,
+    role?: UserRole,
+  ): Promise<AuthResult & { isNewUser: boolean }> {
+    const existing = await this.users.findOne({ where: { email: identity.email } });
+
+    if (existing) {
+      // Role is deliberately not updated from the request. It's settled at signup, and letting a
+      // client change it by re-authenticating would turn a candidate into a recruiter for free.
+      return { ...(await this.issueTokens(existing)), isNewUser: false };
+    }
+
+    if (!role) {
+      // The client is expected to have collected this already — role selection precedes auth in the
+      // product flow — so this is a contract violation worth naming precisely rather than a 500.
+      throw new BadRequestException('A role is required the first time you sign in with Google');
+    }
+
+    const user = await this.users.save(
+      // No password hash: this account has never had a password, and null records that honestly
+      // rather than storing a hash of something unguessable and pretending it could log in.
+      this.users.create({ email: identity.email, passwordHash: null, role }),
+    );
+
+    return { ...(await this.issueTokens(user)), isNewUser: true };
   }
 
   /**

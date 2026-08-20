@@ -7,6 +7,7 @@ import { RefreshToken } from '../../database/entities/refresh-token.entity';
 import { User } from '../../database/entities/user.entity';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { GoogleAuthService } from './google-auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 /**
@@ -26,7 +27,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 @Module({
   imports: [TypeOrmModule.forFeature([User, RefreshToken]), PassportModule, JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, GoogleAuthService, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}
