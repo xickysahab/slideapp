@@ -1,0 +1,55 @@
+# ---- Secrets (Demo Security Baseline §1: no secrets in the repo, ever) ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.mobileprovision
+google-services.json
+GoogleService-Info.plist
+
+# ---- Dependencies ----
+node_modules/
+.pnp
+.pnp.js
+
+# ---- Build output ----
+dist/
+build/
+*.tsbuildinfo
+
+# ---- Expo / React Native ----
+.expo/
+.expo-shared/
+web-build/
+*.jks
+ios/
+android/
+!swipehire-mobile/app.json
+
+# ---- Testing / coverage ----
+coverage/
+*.lcov
+.nyc_output/
+
+# ---- Logs ----
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- Editors / OS ----
+.DS_Store
+.idea/
+*.swp
+.vscode/*
+!.vscode/extensions.json
+
+# ---- Misc ----
+.cache/
+tmp/
+temp/
