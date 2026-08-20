@@ -13,10 +13,15 @@
       "android": {
         "buildType": "apk"
       },
-      "env": {
-        "//": "Set this to the deployed backend before building — it is baked into the bundle.",
-        "EXPO_PUBLIC_API_URL": "https://REPLACE-ME.up.railway.app"
-      }
+      "//env": [
+        "EXPO_PUBLIC_API_URL is deliberately NOT set here. It is baked into the bundle at build",
+        "time, and this repo is public — committing the backend URL next to a README that already",
+        "publishes the demo password is what would turn a walkthrough into an open door.",
+        "Set it on the EAS project instead, once:",
+        "  eas env:create --name EXPO_PUBLIC_API_URL --value https://<your-url> --environment preview",
+        "The build reads it from there. Without it the app falls back to localhost and will look",
+        "broken on the recipient's phone, so check `eas env:list` before shipping a build."
+      ]
     },
     "preview-simulator": {
       "//": "Runs in the iOS Simulator without an Apple Developer account. Useful for checking a real build before paying for one.",
