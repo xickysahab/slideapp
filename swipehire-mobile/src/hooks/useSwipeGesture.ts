@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   Extrapolation,
@@ -105,6 +106,24 @@ export function useSwipeGesture({
   const restOffset = STACK_OFFSET[Math.min(stackPosition, STACK_OFFSET.length - 1)];
 
   /**
+   * The stack transform lives in its own shared values, animated here rather than inside the
+   * animated style.
+   *
+   * `withSpring()` returns an animation descriptor, not a number — so it can only be *assigned* to
+   * a shared value, never used inside an expression. Writing `translateY.value + withSpring(...)`
+   * type-checks and bundles fine, then fails at runtime with "Transform with key of translateY must
+   * be number or a percentage". Driving the springs here keeps the style doing plain arithmetic on
+   * plain numbers.
+   */
+  const stackScale = useSharedValue(restScale);
+  const stackOffset = useSharedValue(restOffset);
+
+  useEffect(() => {
+    stackScale.value = withSpring(restScale, tokens.motion.spring);
+    stackOffset.value = withSpring(restOffset, tokens.motion.spring);
+  }, [restScale, restOffset, stackScale, stackOffset]);
+
+  /**
    * Drag and stack transforms have to be produced by a *single* animated style — two styles each
    * setting `transform` would clobber each other rather than compose.
    *
@@ -112,8 +131,7 @@ export function useSwipeGesture({
    * than spinning in place (§7.2). React Native rotates about the view centre, so the pivot is
    * moved into place by translating out, rotating, and translating back.
    *
-   * `restScale`/`restOffset` change when a card is promoted up the stack; wrapping them in
-   * `withSpring` here is what animates the promotion (§7.2, damping 18, no overshoot).
+   * The stack springs are driven above; this style just reads their current values.
    */
   const cardStyle = useAnimatedStyle(() => {
     const rotate = interpolate(
@@ -129,13 +147,13 @@ export function useSwipeGesture({
     return {
       transform: [
         { translateX: translateX.value },
-        { translateY: translateY.value + withSpring(restOffset, tokens.motion.spring) },
+        { translateY: translateY.value + stackOffset.value },
         { translateX: pivotX },
         { translateY: pivotY },
         { rotate: `${rotate}deg` },
         { translateX: -pivotX },
         { translateY: -pivotY },
-        { scale: withSpring(restScale, tokens.motion.spring) },
+        { scale: stackScale.value },
       ],
     };
   });

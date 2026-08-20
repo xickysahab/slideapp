@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { SwipeDeck } from './src/components/swipe/SwipeDeck';
 import { useAppFonts } from './src/hooks/useAppFonts';
@@ -49,7 +50,8 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={styles.root}>
-      <SafeAreaView style={styles.root}>
+      <SafeAreaProvider>
+      <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
         <View style={styles.header}>
           <Text style={[type('h3'), styles.wordmark]}>SwipeHire</Text>
 
@@ -99,6 +101,7 @@ export default function App() {
 
         <StatusBar style="light" />
       </SafeAreaView>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
