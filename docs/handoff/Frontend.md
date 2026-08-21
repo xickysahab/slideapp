@@ -126,7 +126,8 @@ logout. A token expiring mid-session drops the user back to auth without any scr
 ```
 RootNavigator
 ├── no session ────────► OnboardingNavigator
-│                          Splash · RoleSelect · Auth
+│                          Auth (login by default; "Sign up" link switches the same
+│                          screen to signup mode, which asks role inside the form)
 ├── setup incomplete ──► SetupNavigator
 │                          candidate: Basics → Resume → ReviewSkills → Preferences
 │                          recruiter: RecruiterSetup
@@ -156,8 +157,7 @@ relative to a listing, so choosing the listing is the first act. The empty state
 | Screen | Notes |
 |---|---|
 | Splash | Shown while the stored session is verified against `/auth/me` |
-| RoleSelect | Precedes the signup form; the role travels in the signup request and is fixed server-side |
-| Auth | Email + password, sign in / sign up |
+| Auth | Single screen, two modes. **Login is the default view** — the common case is a returning user, and the previous build showed a role-select screen first regardless, which stood between an existing account and its own login form for no reason. Signing up is a "Sign up" link tap away; the same form then asks role inline, above email and password, as two selectable options rather than a separate screen. The role still travels in the signup request and is fixed server-side |
 | CandidateBasics | Name, title, headline, years |
 | ResumeUpload | PDF picker → signed-URL upload → parsing spinner. Skippable |
 | ReviewSkills | Parsed skills as removable chips, plus manual entry. **The honest moment** — a real parser ran and the user corrects it |
