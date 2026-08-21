@@ -14,22 +14,26 @@ you have drifted into the wrong spec.
 |---|---|
 | [`docs/CLAUDE-DEMO.md`](docs/CLAUDE-DEMO.md) | **The constitution for this build.** Read first, every session. |
 | [`CONTEXT.md`](CONTEXT.md) | **Where the build actually stands** — decisions already made, the five schema deviations and why, what's verified, what bit us, what's left. Read second. |
-| [`docs/BACKEND.md`](docs/BACKEND.md) | The API contract every screen is written against. |
-| [`docs/SwipeHire-DEMO-PRD.md`](docs/SwipeHire-DEMO-PRD.md) | Scope table, demo journey, seed-data requirement, definition of done |
-| [`docs/SwipeHire-DEMO-Architecture.md`](docs/SwipeHire-DEMO-Architecture.md) | Stack, 9-table schema, swipe/match/chat/resume flows |
-| [`docs/SwipeHire-DEMO-Frontend-Spec.md`](docs/SwipeHire-DEMO-Frontend-Spec.md) | Screens to build, design system (reused verbatim from full spec) |
-| [`docs/SwipeHire-DEMO-Security-Baseline.md`](docs/SwipeHire-DEMO-Security-Baseline.md) | The minimum honest bar — §1 items are non-negotiable |
-| [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticket-List.md) | The sequenced build plan (DEMO-00 → DEMO-21) |
+| [`docs/handoff/`](docs/handoff/) | **The system as built** — six documents written from the code. These supersede the demo planning specs, which have been removed. |
+| [`docs/handoff/Backend.md`](docs/handoff/Backend.md) | The API contract every screen is written against |
+| [`docs/handoff/Architecture.md`](docs/handoff/Architecture.md) | Stack, 11-table schema, swipe/match/chat/resume flows, auth, deploy |
+| [`docs/handoff/Frontend.md`](docs/handoff/Frontend.md) | Design system, navigation, screens, gesture spec, accessibility |
+| [`docs/handoff/Security.md`](docs/handoff/Security.md) | What is defended, what is not, and where the line is |
+| [`docs/handoff/PRD.md`](docs/handoff/PRD.md) | Scope, product principles, seed-data requirement, definition of done |
+| [`docs/handoff/Ticket-List.md`](docs/handoff/Ticket-List.md) | The build plan with verified status (DEMO-00 → DEMO-21) |
+| [`docs/DEPLOY.md`](docs/DEPLOY.md) | Deployment procedure. Not duplicated in `handoff/` — this is the only copy |
 | [`docs/SwipeHire-DEMO-Journey-Map.md`](docs/SwipeHire-DEMO-Journey-Map.md) | **Read alongside the ticket list.** Maps the client's user-journey diagram onto the demo scope, and records the one agreed scope addition (DEMO-16b). |
 | [`docs/swipehire-user-journey.svg`](docs/swipehire-user-journey.svg) | The source journey diagram the demo must walk end to end |
-| [`docs/full-spec/`](docs/full-spec/) | The original production spec. **Not what this build follows** — reference only. Two legitimate uses: copying the design system verbatim (`SwipeHire_Frontend_Specification.md` §2/§3/§15), and reading the "why" behind a decision the demo docs inherited. |
+| [`docs/full-spec/`](docs/full-spec/) | The original production spec. **Not what this build follows** — reference only. Two legitimate uses: copying the design system verbatim (`SwipeHire_Frontend_Specification.md` §2/§3/§15), and reading the "why" behind a decision this build inherited. |
 
 ## Repo layout
 
 ```
 swipehire-api/      NestJS backend (modular monolith) → Railway/Render
 swipehire-mobile/   Expo / React Native app (New Architecture)
-docs/               All demo specs — the source of truth
+docs/handoff/       The system as built — start here
+docs/               Journey map, deploy guide, and the constitution
+docs/full-spec/     Original production spec — reference only
 ```
 
 ## The two things not to compromise on

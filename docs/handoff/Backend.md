@@ -697,26 +697,27 @@ Revoked rather than deleted, so a later reuse attempt is distinguishable from an
 
 ## 7. Where this differs from the demo spec
 
-Five additions beyond `SwipeHire-DEMO-Architecture.md` §3, each in its own migration so the
-deviation is visible in history rather than folded in silently.
+Five additions beyond the demo architecture specification the schema was transcribed from, each in
+its own migration so the deviation is visible in history rather than folded in silently. That spec
+has since been removed; `Architecture.md` §3 describes the schema as it now stands.
 
 | # | Change | Why it was necessary |
 |---|---|---|
-| 1 | `CREATE EXTENSION citext` | §3 declares `email CITEXT` but only creates `vector` and `pgcrypto`. Running it verbatim fails outright. |
+| 1 | `CREATE EXTENSION citext` | The spec declared `email CITEXT` but only creates `vector` and `pgcrypto`. Running it verbatim fails outright. |
 | 2 | `matches.outcome_note` | The Outcome tail of the client's journey diagram, which the demo docs never covered. |
-| 3 | `refresh_tokens` table | Security Baseline §1 requires server-side refresh storage; §3 has nowhere to put it (the full spec's `sessions` table is among those dropped). Without it, logout couldn't revoke anything. |
-| 4 | `recruiter_profiles` table | §3 keeps `companies` but drops the link between a recruiter and one. The recruiter journey sets up a company *before* posting a job, so `jobs.company_id` can't serve as the link. |
-| 5 | `swipes.job_id` + split unique indexes | §3 has no job column, so a recruiter passing on a candidate for one listing lost them from every listing, and match detection couldn't tell which job a right-swipe was for — while `matches` is keyed per job. The demo docs get away with it only because their PRD has each recruiter create exactly one listing. |
+| 3 | `refresh_tokens` table | The security baseline required server-side refresh storage; the schema had nowhere to put it (the full spec's `sessions` table is among those dropped). Without it, logout couldn't revoke anything. |
+| 4 | `recruiter_profiles` table | The spec kept `companies` but dropped the link between a recruiter and one. The recruiter journey sets up a company *before* posting a job, so `jobs.company_id` can't serve as the link. |
+| 5 | `swipes.job_id` + split unique indexes | The spec had no job column, so a recruiter passing on a candidate for one listing lost them from every listing, and match detection couldn't tell which job a right-swipe was for — while `matches` is keyed per job. The demo docs get away with it only because their PRD has each recruiter create exactly one listing. |
 
-Also noted, not changed: the spec's own single unique constraint on swipes has a NULL hole
+Also noted, not changed: the spec's single unique constraint on swipes had a NULL hole
 (see §6 above).
 
 ---
 
 ## 8. Security properties actually implemented
 
-From `SwipeHire-DEMO-Security-Baseline.md` §1 — the things it says not to skip even under time
-pressure.
+The things the security baseline said not to skip even under time pressure. Reasoning and the full
+picture, including what was skipped, are in `Security.md`.
 
 - **Argon2id password hashing.** Never plaintext, not even for seed accounts.
 - **Ownership checked server-side on every resource-ID endpoint.** `404`, not `403`, for "exists but

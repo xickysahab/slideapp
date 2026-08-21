@@ -15,7 +15,7 @@ import { RealtimeModule } from './shared/realtime/realtime.module';
 import { StorageModule } from './shared/storage/storage.module';
 
 /**
- * Module layout mirrors docs/SwipeHire-DEMO-Architecture.md §2. The feature modules are empty
+ * Module layout mirrors docs/handoff/Architecture.md §2. The feature modules are empty
  * skeletons at DEMO-00 — each gets filled in by its own ticket (see the header comment in each
  * module file). They are registered here from the start so the boundaries are visible and a later
  * ticket has an obvious place to land.

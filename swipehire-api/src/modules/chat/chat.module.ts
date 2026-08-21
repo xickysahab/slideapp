@@ -7,7 +7,7 @@ import { ChatController } from './chat.controller';
 import { ChatService } from './chat.service';
 
 /**
- * ChatModule — see docs/SwipeHire-DEMO-Architecture.md §2.
+ * ChatModule — see docs/handoff/Architecture.md §2.
  *
  * Owns tables: messages
  * Built in:    chat history, sending, read receipts

@@ -12,7 +12,7 @@ import { SwipeMatchController } from './swipe-match.controller';
 import { SwipeService } from './swipe.service';
 
 /**
- * SwipeMatchModule — see docs/SwipeHire-DEMO-Architecture.md §2.
+ * SwipeMatchModule — see docs/handoff/Architecture.md §2.
  *
  * Owns tables: swipes, matches
  * Built in:    swipe recording, match derivation, the matches list, and the outcome tail

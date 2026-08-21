@@ -12,7 +12,7 @@ import { JobController } from './job.controller';
 import { JobService } from './job.service';
 
 /**
- * JobModule — see docs/SwipeHire-DEMO-Architecture.md §2.
+ * JobModule — see docs/handoff/Architecture.md §2.
  *
  * Owns tables: jobs
  * Built in:    DEMO-06 (discovery and scoring build on this)

@@ -8,21 +8,21 @@ constitution applies (the **demo** one, not the full-spec one in the grandparent
 
 Most relevant here:
 
-- [`../docs/SwipeHire-DEMO-Frontend-Spec.md`](../docs/SwipeHire-DEMO-Frontend-Spec.md) — screens to
-  build, design system, navigation tree, which screens are explicitly cut
+- [`../docs/handoff/Frontend.md`](../docs/handoff/Frontend.md) — design system, navigation tree,
+  screens, the swipe gesture spec, accessibility
 - [`../docs/SwipeHire-DEMO-Journey-Map.md`](../docs/SwipeHire-DEMO-Journey-Map.md) — the user-journey
   diagram mapped onto demo scope
-- [`../docs/SwipeHire-DEMO-Ticket-List.md`](../docs/SwipeHire-DEMO-Ticket-List.md) — build order
+- [`../docs/handoff/Ticket-List.md`](../docs/handoff/Ticket-List.md) — build plan and status
 
 ## Rules that bite most often on this side
 
 - **No hard-coded hex or px values in components.** Everything comes from `theme/tokens.ts`, copied
-  verbatim from the full Frontend Spec §15. Do not retype a hex code from memory.
+  verbatim from the full Frontend Spec §15 and catalogued in `../docs/handoff/Frontend.md` §2. Do not retype a hex code from memory.
 - **Anti-"dating app" visual direction.** No hearts, no flames/streaks, no hot pink or red as a
   primary, no confetti, no bouncy spring overshoot, no photo-first candidate browsing.
 - **Three type roles, never mixed:** Fraunces (display), Inter (UI/body), IBM Plex Mono (any number
   that states a fact — salary, match %, years, timestamps).
-- **`MatchSeal` and `SwipeCard` get built first and get built right.** Frontend Spec §3 is explicit
+- **`MatchSeal` and `SwipeCard` get built first and get built right.** `handoff/Frontend.md` §3 and §4 are explicit
   about this: whether the demo "feels real" rides on those two components.
 - **Keep the 3-card rolling window** on the deck. It is the cheap thing that makes swiping feel
   smooth, and the demo doc calls it out as do-not-cut.
@@ -31,6 +31,6 @@ Most relevant here:
 
 ## Navigation
 
-React Navigation, matching the tree in Demo Frontend Spec §4 one-to-one (`RootStack` →
+React Navigation, matching the tree in `../docs/handoff/Frontend.md` §5 one-to-one (`RootStack` →
 `OnboardingStack` / `CandidateRootTabs` / `RecruiterRootTabs`). Not Expo Router — the spec's tree is
 written in React Navigation terms and translating it would only add drift.

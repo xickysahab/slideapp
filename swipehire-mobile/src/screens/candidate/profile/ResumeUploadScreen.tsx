@@ -17,7 +17,7 @@ import { SetupScaffold } from '../../onboarding/SetupScaffold';
  * of seconds, so pushing a whole screen for it would flash more than it would inform.
  *
  * The file goes straight from the device to storage via a signed URL; it never passes through our
- * API. See docs/BACKEND.md §3.3.
+ * API. See docs/handoff/Backend.md §3.3.
  */
 
 type Phase = 'idle' | 'uploading' | 'parsing';

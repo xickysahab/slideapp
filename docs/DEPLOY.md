@@ -209,7 +209,7 @@ than a few days after the last time you touched the database, check the dashboar
 
 ## 6. Before you share a link
 
-`docs/SwipeHire-DEMO-Security-Baseline.md` §3 is the line. This build skips rate limiting, malware
+`docs/handoff/Security.md` §4 is the line. This build skips rate limiting, malware
 scanning, RLS and the rest of the pre-launch checklist — all recorded, deliberate cuts, and fine
 for a controlled walkthrough in front of one person.
 

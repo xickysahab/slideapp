@@ -7,7 +7,7 @@ import { InterviewController } from './interview.controller';
 import { InterviewService } from './interview.service';
 
 /**
- * InterviewModule — see docs/SwipeHire-DEMO-Architecture.md §2.
+ * InterviewModule — see docs/handoff/Architecture.md §2.
  *
  * Owns tables: interviews
  * Built in:    propose → accept, one round

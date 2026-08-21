@@ -16,9 +16,14 @@ session (Claude Code or Cursor) has to re-derive them:
 2. Which nodes are covered but implemented differently under the hood (invisible to the user).
 3. Which nodes were cut by the demo docs, what was decided about each, and what the user sees instead.
 
-**Authority:** this document does not override the other demo docs. Where it differs, it is recording
-an explicit decision made with Aagam, and says so. Everything else still defers to
-`SwipeHire-DEMO-PRD.md` / `-Architecture.md` / `-Frontend-Spec.md` / `-Security-Baseline.md`.
+**Authority:** this document does not override the rest. Where it differs, it is recording an
+explicit decision made with Aagam, and says so. Everything else defers to `handoff/PRD.md`,
+`handoff/Architecture.md`, `handoff/Frontend.md` and `handoff/Security.md`.
+
+**A note on tense:** this was written against the demo planning specs, which have since been removed
+now that the build is done. It is kept because the mapping from the client's diagram to scope — and
+the DEMO-16b decision in §3 — exist nowhere else. Read "the demo docs" below as "what was planned";
+`handoff/` is what was built.
 
 ---
 
@@ -116,7 +121,7 @@ happens; only the machinery behind it changed. **Do not re-add the full-spec inf
 
 ## 3. DEMO-16b — Outcome & Match Closure (scope addition)
 
-**This ticket is not in `SwipeHire-DEMO-Ticket-List.md`.** It was added deliberately so the journey
+**This ticket is not in `handoff/Ticket-List.md`.** It was added deliberately so the journey
 diagram has a real ending instead of stopping at "Interview Scheduled." It is cheap — it is
 application logic over columns the demo schema already has — which is why it was the one cut node
 worth adding back.

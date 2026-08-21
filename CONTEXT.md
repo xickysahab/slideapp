@@ -4,7 +4,7 @@ Written for whoever picks this up next, including a fresh session with none of t
 records what was built, what was decided and why, what bit us, and what is left.
 
 **Read [`CLAUDE.md`](CLAUDE.md) first** for which spec governs this build, then this file for state.
-[`docs/BACKEND.md`](docs/BACKEND.md) is the API contract.
+[`docs/handoff/Backend.md`](docs/handoff/Backend.md) is the API contract.
 
 Last updated: after the mobile app was wired to the real API and verified on the iOS simulator.
 
@@ -225,7 +225,7 @@ EAS preview build. Remember `EXPO_PUBLIC_API_URL` has to point at the deployed U
 
 Push notifications, calendar sync, recruiter verification workflow, deck filters, Fast-Track, admin
 dashboard, moderation, RLS, rate limiting, malware scanning. Every one is a recorded cut, not an
-oversight — see `docs/SwipeHire-DEMO-Journey-Map.md` §2.3 and `docs/BACKEND.md` §12.
+oversight — see `docs/SwipeHire-DEMO-Journey-Map.md` §2.3 and `docs/handoff/Backend.md` §12.
 
 ---
 

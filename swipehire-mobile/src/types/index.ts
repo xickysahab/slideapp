@@ -1,7 +1,7 @@
 /**
  * API contract types.
  *
- * These mirror what the backend actually returns — see docs/BACKEND.md §3. Where a field is absent
+ * These mirror what the backend actually returns — see docs/handoff/Backend.md §3. Where a field is absent
  * here it is absent from the payload too, not merely unused: the blind-first rules are enforced
  * server-side, so there is no surname or contact detail on a pre-match card for the client to
  * accidentally render.
@@ -201,7 +201,7 @@ export interface Interview {
 }
 
 // ---------------------------------------------------------------------------
-// Realtime payloads (docs/BACKEND.md §4)
+// Realtime payloads (docs/handoff/Backend.md §4)
 // ---------------------------------------------------------------------------
 
 export interface MatchCreatedEvent {

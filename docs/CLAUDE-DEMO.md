@@ -16,17 +16,28 @@ Same two operating rules as before, just against a smaller spec:
 
 ## 1. Source Documents for This Build
 
-All in `/docs`:
+**The five demo planning specs this file was written against have been removed.** The build is done;
+they described what to build, and `docs/handoff/` now describes what exists. Where the two would
+have disagreed, the handoff documents follow the code — they were written by reading it.
 
 | File | Role |
 |---|---|
-| `SwipeHire-DEMO-PRD.md` | What the demo must prove, trimmed scope table, seed-data requirement, definition of done |
-| `SwipeHire-DEMO-Architecture.md` | Lightweight stack, trimmed schema, simplified swipe/match/chat/resume flows |
-| `SwipeHire-DEMO-Frontend-Spec.md` | Which screens to build, design system reused verbatim from the full spec |
-| `SwipeHire-DEMO-Security-Baseline.md` | The minimum honest bar for a live demo — not the production security model |
-| `SwipeHire-DEMO-Ticket-List.md` | The actual sequenced build plan, phase by phase, with tool/session estimates |
+| `handoff/PRD.md` | What the product is, scope as built, product principles, definition of done |
+| `handoff/Architecture.md` | Stack, 11-table schema, swipe/match/chat/resume flows, auth, scoring, deploy |
+| `handoff/Backend.md` | The full API contract — every endpoint, payload and error shape |
+| `handoff/Frontend.md` | Design system, navigation, screens, the swipe gesture, accessibility |
+| `handoff/Security.md` | What is defended, what is deliberately not, and where the line is |
+| `handoff/Ticket-List.md` | The build plan with verified status |
+| `SwipeHire-DEMO-Journey-Map.md` | The client's journey diagram mapped onto scope, and the DEMO-16b addition |
+| `DEPLOY.md` | Deployment procedure. The only copy — deliberately not duplicated into `handoff/` |
 
-The original 5 full-spec documents still exist in `/docs` too (keep them — they're the real spec for later) but are **not** what this build follows. If a demo doc doesn't cover something you need, check the full-spec doc for the underlying idea, then re-scope it down yourself the same way the demo docs already did elsewhere — don't just implement the full-spec version wholesale.
+The 8 full-spec documents are still in `docs/full-spec/` (keep them — they're the real spec for
+later) but are **not** what this build follows. If a handoff doc doesn't cover something you need,
+check the full-spec doc for the underlying idea, then re-scope it down the same way this build
+already did elsewhere — don't implement the full-spec version wholesale.
+
+**Section numbers moved when the docs were rewritten.** The old Security Baseline's §1 (keep these) is
+now `handoff/Security.md` §1, its §2 (skipped) is §3, and its §3 (the hard line) is §4.
 
 ---
 
@@ -34,10 +45,10 @@ The original 5 full-spec documents still exist in `/docs` too (keep them — the
 
 Every cut in these demo docs was made for speed. None of them were made carelessly. Two things are called out repeatedly across the demo docs as **not** okay to cut even under time pressure, because they're cheap and they're what makes this look like real engineering instead of a mockup:
 
-- **Server-side ownership checks on every resource-ID endpoint**, and **matches only ever created server-side from two real swipes, never client-submitted** (Demo Security Baseline §1).
-- **The swipe deck's gesture/animation feel** (Demo Frontend Spec §1, Demo Ticket List Phase 3) — a laggy or janky swipe card undermines the entire demo faster than any missing feature would, since it's the first thing the client's hands touch.
+- **Server-side ownership checks on every resource-ID endpoint**, and **matches only ever created server-side from two real swipes, never client-submitted** (`handoff/Security.md` §1).
+- **The swipe deck's gesture/animation feel** (`handoff/Frontend.md` §1 and §4, `handoff/Ticket-List.md` Phase 3) — a laggy or janky swipe card undermines the entire demo faster than any missing feature would, since it's the first thing the client's hands touch.
 
-If a deadline is genuinely forcing a cut, cut a whole Phase from the Ticket List (Phase 5, interview scheduling, is the designated first thing to drop — see Ticket List's closing note) before compromising either of these two.
+If a deadline is genuinely forcing a cut, cut a whole Phase from the Ticket List (Phase 5, interview scheduling, is the designated first thing to drop — see the Ticket List's closing note) before compromising either of these two.
 
 ---
 

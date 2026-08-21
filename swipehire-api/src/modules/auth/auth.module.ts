@@ -11,7 +11,7 @@ import { GoogleAuthService } from './google-auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 /**
- * AuthModule — see docs/SwipeHire-DEMO-Architecture.md §2.
+ * AuthModule — see docs/handoff/Architecture.md §2.
  *
  * Owns tables: users, refresh_tokens
  * Built in:    DEMO-03

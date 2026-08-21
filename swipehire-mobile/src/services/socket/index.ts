@@ -11,7 +11,7 @@ import { API_ORIGIN } from '../api/config';
  * a match arriving while the user is deep in the recruiter dashboard still needs to land, and
  * tearing the socket down on every navigation would drop exactly the events the demo depends on.
  *
- * Writes go over REST; this is delivery only. See docs/BACKEND.md §4 for the event list.
+ * Writes go over REST; this is delivery only. See docs/handoff/Backend.md §4 for the event list.
  */
 
 let socket: Socket | null = null;

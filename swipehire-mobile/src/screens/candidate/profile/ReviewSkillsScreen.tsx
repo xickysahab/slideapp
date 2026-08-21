@@ -18,7 +18,7 @@ import { SetupScaffold } from '../../onboarding/SetupScaffold';
  * That's the difference between a demo that looks automated and one that looks honest.
  *
  * Removal has to work, not just addition. The API replaces the skill list wholesale rather than
- * merging for exactly this reason (docs/BACKEND.md §3.2).
+ * merging for exactly this reason (docs/handoff/Backend.md §3.2).
  */
 
 export interface ReviewSkillsScreenProps {

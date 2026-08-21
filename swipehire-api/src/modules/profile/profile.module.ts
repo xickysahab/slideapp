@@ -9,7 +9,7 @@ import { ProfileController } from './profile.controller';
 import { ProfileService } from './profile.service';
 
 /**
- * ProfileModule — see docs/SwipeHire-DEMO-Architecture.md §2.
+ * ProfileModule — see docs/handoff/Architecture.md §2.
  *
  * Owns tables: profiles, candidate_profiles, companies, recruiter_profiles
  * Built in:    DEMO-04 (resume fields land in DEMO-05)

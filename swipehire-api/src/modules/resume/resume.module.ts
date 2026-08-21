@@ -6,7 +6,7 @@ import { ResumeController } from './resume.controller';
 import { ResumeService } from './resume.service';
 
 /**
- * ResumeModule — see docs/SwipeHire-DEMO-Architecture.md §2.
+ * ResumeModule — see docs/handoff/Architecture.md §2.
  *
  * Owns tables: none of its own — it writes the resume key and extracted skills onto
  *              candidate_profiles, which ProfileModule owns.

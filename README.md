@@ -61,7 +61,7 @@ spec so re-adding that infrastructure later is additive rather than a rewrite.
 
 ## Build status
 
-Working through [`docs/SwipeHire-DEMO-Ticket-List.md`](docs/SwipeHire-DEMO-Ticket-List.md).
+Working through [`docs/handoff/Ticket-List.md`](docs/handoff/Ticket-List.md).
 
 - [x] **DEMO-00** Repo & environment scaffolding
 - [x] **DEMO-01** Database provisioning — Supabase Postgres 17.6, 9 tables, pgvector enabled
@@ -131,6 +131,6 @@ unit tests for skill matching and match scoring.
 
 ## A note on sharing
 
-Per [`docs/SwipeHire-DEMO-Security-Baseline.md`](docs/SwipeHire-DEMO-Security-Baseline.md) §3: this
+Per [`docs/handoff/Security.md`](docs/handoff/Security.md) §4: this
 build skips rate limiting, malware scanning, RLS and the rest of the production checklist. It is
 built for a controlled walkthrough. Don't leave a public link to it standing.

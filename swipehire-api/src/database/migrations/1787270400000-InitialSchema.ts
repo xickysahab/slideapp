@@ -1,15 +1,17 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 /**
- * DEMO-01 — the demo schema, transcribed from docs/SwipeHire-DEMO-Architecture.md §3.
+ * DEMO-01 — the initial schema. Documented in docs/handoff/Architecture.md §3.
  *
- * The DDL below is copied from that document rather than generated from entity classes, because
- * §3 *is* the specification: every table maps 1:1 onto a table in the full architecture doc, so
- * growing toward the real schema later is additive rather than a rewrite.
+ * The DDL was transcribed by hand from the demo architecture specification rather than generated
+ * from entity classes, because that document *was* the specification: every table maps 1:1 onto a
+ * table in the full architecture doc, so growing toward the real schema later is additive rather
+ * than a rewrite. That spec has since been superseded by docs/handoff/Architecture.md, which
+ * describes the schema as it now stands — including the four migrations layered on top of this one.
  *
- * ONE ADDITION to what §3 literally says: `CREATE EXTENSION citext`. §3 declares
- * `users.email CITEXT` but only creates the `vector` and `pgcrypto` extensions — running it
- * verbatim fails with "type citext does not exist". This is a gap in the doc, not a scope change;
+ * ONE ADDITION to what the spec literally said: `CREATE EXTENSION citext`. It declared
+ * `users.email CITEXT` but only created the `vector` and `pgcrypto` extensions — running it
+ * verbatim fails with "type citext does not exist". This was a gap in the doc, not a scope change;
  * the alternative (downgrading email to TEXT) would silently lose the case-insensitive uniqueness
  * that stops `Aagam@x.com` and `aagam@x.com` registering as two accounts.
  *

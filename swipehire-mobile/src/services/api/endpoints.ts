@@ -19,7 +19,7 @@ import { api } from './client';
  * Every API call the app makes, one function per endpoint.
  *
  * Screens call these rather than `api.get('/some/path')` directly, so a path or shape change has
- * exactly one place to be updated. Mirrors docs/BACKEND.md §3.
+ * exactly one place to be updated. Mirrors docs/handoff/Backend.md §3.
  */
 
 // ---------------------------------------------------------------------------
